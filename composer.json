@@ -1,0 +1,42 @@
+{
+    "name": "wsydney76/craft-film-festival",
+    "description": "Adds film festival functionality to Craft starter",
+    "type": "craft-plugin",
+    "license": "mit",
+    "support": {
+        "issues": "https://github.com/wsydney@web.de/issues?state=open",
+        "source": "https://github.com/wsydney@web.de",
+        "docs": "https://github.com/wsydney@web.de",
+        "rss": "https://github.com/wsydney@web.de/releases.atom"
+    },
+    "require": {
+        "php": ">=8.0.2",
+        "craftcms/cms": "^4.3.5"
+    },
+    "require-dev": {
+        "craftcms/ecs": null,
+        "craftcms/phpstan": null
+    },
+    "autoload": {
+        "psr-4": {
+            "wsydney76\\ff\\": "src/"
+        }
+    },
+    "extra": {
+        "handle": "ff",
+        "name": "Film Festival",
+        "developer": "wsydney76",
+        "documentationUrl": "https://github.com/wsydney@web.de"
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.0.2"
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true
+        }
+    }
+}
+
