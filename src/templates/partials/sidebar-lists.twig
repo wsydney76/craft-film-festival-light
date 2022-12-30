@@ -1,0 +1,3 @@
+{% for list in lists %}
+	{% include '_widgets/entries-list.twig' with {heading: list.heading, query: list.query} %}
+{% endfor %}

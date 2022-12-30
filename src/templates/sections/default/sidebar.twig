@@ -1,0 +1,53 @@
+{% extends "_layouts/main.twig" %}
+
+{% set featuredImage = entry.featuredImage.one %}
+
+{% block heroArea %}
+    {% if featuredImage %}
+        {% include '_layouts/partials/hero-area-display.twig' with {
+            image: featuredImage,
+            title: entry.title,
+            tagline: entry.tagline
+        } only %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+    {% embed '_layouts/embeds/content-sidebar.twig' with {showHeader: featuredImage == null, alignTitle: 'left'} %}
+
+        {% block contentTop %}
+
+           <div class="mt-8">
+               {% include "@ff/sections/#{entry.section.handle}/contentTop.twig" ignore missing with {
+                   entry
+               } only %}
+           </div>
+
+        {% endblock %}
+
+        {% block contentBottom %}
+
+            {% include "@ff/sections/#{entry.section.handle}/contentBottom.twig" ignore missing with {
+                entry
+            } only %}
+
+
+        {% endblock %}
+
+        {% block sidebarTop %}
+            {% include "@ff/sections/#{entry.section.handle}/sidebarTop.twig" ignore missing with {
+                entry
+            } only %}
+        {% endblock %}
+
+        {% block sidebarBottom %}
+            {% include "@ff/sections/#{entry.section.handle}/sidebarBottom.twig" ignore missing with {
+                entry
+            } only %}
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}
+

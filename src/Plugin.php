@@ -65,6 +65,7 @@ class Plugin extends BasePlugin
             View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS,
             function(RegisterTemplateRootsEvent $event) {
                 $event->roots['ff'] = $this->getBasePath() . '/templates';
+                $event->roots['@ff'] = $this->getBasePath() . '/templates';
             }
         );
     }

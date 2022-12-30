@@ -7,6 +7,8 @@ use craft\base\Field;
 use craft\base\Model;
 use craft\elements\Entry;
 use craft\fieldlayoutelements\CustomField;
+use craft\fieldlayoutelements\LineBreak;
+use craft\fieldlayoutelements\TitleField;
 use craft\fields\Assets;
 use craft\fields\Date;
 use craft\fields\Entries;
@@ -14,17 +16,22 @@ use craft\fields\Number;
 use craft\fields\PlainText;
 use craft\helpers\Console;
 use craft\models\FieldGroup;
+use craft\models\FieldLayout;
+use craft\models\FieldLayoutTab;
 use craft\models\Section;
 use craft\models\Section_SiteSettings;
 use craft\models\Site;
 use craft\records\FieldGroup as FieldGroupRecord;
+use DateTime;
 use modules\main\MainModule;
 use yii\base\Component;
 use function array_merge;
 use function collect;
 use function extract;
+use function in_array;
 use function is_string;
 use function strtolower;
+use function var_dump;
 use const EXTR_OVERWRITE;
 
 /**
@@ -32,9 +39,12 @@ use const EXTR_OVERWRITE;
  */
 class MigrationService extends Component
 {
+
+
     protected array $sections = [];
     protected array $fields = [];
     protected $fieldGroup;
+    protected $doUpdateFieldlayout = [];
 
     public function install(): bool
     {
@@ -75,6 +85,7 @@ class MigrationService extends Component
                 'plural' => 'Films',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
+                'template' => 'ff/sections/default/sidebar'
             ]) &&
 
             $this->createSection([
@@ -82,6 +93,7 @@ class MigrationService extends Component
                 'plural' => 'People',
                 'titleFormat' => '{firstName} {lastName}',
                 'addIndexPage' => true,
+                'template' => 'ff/sections/default/sidebar'
             ]) &&
 
             $this->createSection([
@@ -91,7 +103,8 @@ class MigrationService extends Component
                 'handle' => 'filmSection',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
-                'entriesFieldHandle' => 'filmSections'
+                'entriesFieldHandle' => 'filmSections',
+                'template' => 'ff/sections/default/md'
             ]) &&
 
             $this->createSection([
@@ -99,6 +112,7 @@ class MigrationService extends Component
                 'plural' => 'Locations',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
+                'template' => 'ff/sections/default/sidebar'
              ]) &&
 
             $this->createSection([
@@ -107,35 +121,41 @@ class MigrationService extends Component
                 'plural' => 'Competitions',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
+                'template' => 'ff/sections/default/md'
             ]) &&
 
             $this->createSection([
                 'name' => 'Country',
                 'plural' => 'Countries',
                 'createEntriesField' => true,
+                'template' => 'ff/sections/default/xl'
             ]) &&
 
             $this->createSection([
                 'name' => 'Genre',
                 'plural' => 'Genres',
                 'createEntriesField' => true,
+                'template' => 'ff/sections/default/xl'
             ]) &&
 
             $this->createSection([
                 'name' => 'Diary',
                 'plural' => 'Diaries',
+                'template' => 'ff/sections/default/md'
             ]) &&
 
             $this->createSection([
                 'name' => 'Jury',
                 'plural' => 'Juries',
                 'createEntriesField' => true,
+                'template' => 'ff/sections/default/md'
             ]) &&
 
             $this->createSection([
                 'name' => 'Sponsor',
                 'plural' => 'Sponsors',
                 'createEntriesField' => true,
+                'template' => 'ff/sections/default/md'
             ]) &&
 
             $this->createSection([
@@ -144,6 +164,14 @@ class MigrationService extends Component
                 'plural' => 'Topics',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
+                'template' => 'ff/sections/default/xl'
+            ]) &&
+
+            $this->createSection([
+                'name' => 'Screening',
+                'plural' => 'screenings',
+                'titleFormat' => '{films.one.title} - {locations.one.title} - {screeningDateTime|datetime(\'short\')}',
+                'template' => 'ff/sections/default/md'
             ])
         );
     }
@@ -224,9 +252,32 @@ class MigrationService extends Component
             'handle' => 'photo',
             'name' => 'Photo',
             'defaultUploadLocationSource' => "volume:$volume->uid",
+            'viewMode' => 'large',
             'sources' => [
                 "volume:$volume->uid"
             ]
+        ]);
+
+        $this->createField([
+            'class' => Assets::class,
+            'groupId' => $fieldGroup->id,
+            'handle' => 'filmPoster',
+            'name' => 'Film Poster',
+            'defaultUploadLocationSource' => "volume:$volume->uid",
+            'viewMode' => 'large',
+            'sources' => [
+                "volume:$volume->uid"
+            ]
+        ]);
+
+        $this->createField([
+            'class' => PlainText::class,
+            'groupId' => $fieldGroup->id,
+            'handle' => 'shortBio',
+            'name' => 'Short Biography',
+            'multiline' => true,
+            'initialRows' => 2,
+            'translationMethod' => Field::TRANSLATION_METHOD_LANGUAGE,
         ]);
 
         $this->createField([
@@ -237,6 +288,13 @@ class MigrationService extends Component
             'multiline' => true,
             'initialRows' => 2,
             'translationMethod' => Field::TRANSLATION_METHOD_LANGUAGE,
+        ]);
+
+        $this->createField([
+            'class' => Date::class,
+            'groupId' => $fieldGroup->id,
+            'name' => 'Birthday',
+            'handle' => 'birthday'
         ]);
 
         $this->createField([
@@ -254,19 +312,23 @@ class MigrationService extends Component
     protected function updateFieldLayouts()
     {
         $this->updateFieldLayout('film', [
-            'featuredImage', 'tagline',
-            'filmSections', 'competitions', 'topics',
-            'countries', 'genres', 'releaseYear',
-            'cast', 'script', 'camera', 'director',
-            'sponsors',
-            'bodyContent',
+            'Content' => [
+                'featuredImage', 'tagline', 'filmPoster',
+                'filmSections', 'competitions', 'topics', 'sponsors',
+                'countries', 'genres', 'releaseYear',
+                'bodyContent'
+            ],
+            'Crew' => [
+                'cast', 'script', 'camera', 'director',
+            ]
         ]);
+
 
         $this->updateFieldLayout('person', [
             ['firstName', ['required' => true, 'width' => 25]],
             ['lastName', ['required' => true, 'width' => 25]],
             'featuredImage', 'tagline',
-            'photo', 'filmography',
+            'photo', 'birthday', 'shortBio', 'filmography',
             'bodyContent'
         ]);
 
@@ -293,6 +355,10 @@ class MigrationService extends Component
         $this->updateFieldLayout('topic', [
             'heroArea', 'featuredImage', 'tagline', 'bodyContent'
         ]);
+
+        $this->updateFieldLayout('screening', [
+           'films', 'locations', 'screeningDateTime'
+        ]);
     }
 
     private function createSection(array $config): bool
@@ -305,6 +371,7 @@ class MigrationService extends Component
         $titleFormat = $config['titleFormat'] ?? '';
         $addIndexPage = $config['addIndexPage'] ?? false;
         $createEntriesField = $config['createEntriesField'] ?? false;
+        $template = $config['template'] ?? "ff/sections/$handle";
 
         $this->sections[$handle] = Craft::$app->sections->getSectionByHandle($handle);
         if ($this->sections[$handle]) {
@@ -321,7 +388,7 @@ class MigrationService extends Component
                         'enabledByDefault' => true,
                         'hasUrls' => true,
                         'uriFormat' => Craft::t('ff', $baseUri, language: $site->language) . '/{slug}',
-                        'template' => "ff/sections/$handle"
+                        'template' => $template
                     ]))
                     ->toArray()
             ]
@@ -334,6 +401,8 @@ class MigrationService extends Component
 
         $this->message("Section $name created.");
 
+        $this->doUpdateFieldlayout[] = $section->handle;
+
         $type = $section->getEntryTypes()[0];
         $type->titleTranslationMethod = Field::TRANSLATION_METHOD_LANGUAGE;
         if ($titleFormat) {
@@ -345,7 +414,7 @@ class MigrationService extends Component
             $this->logError("Could not save entry type for $handle", $type);
         }
 
-        $this->message("Entry type $section->name/$type->name created.");
+        $this->message("Entry type $section->name/$type->name updated.");
 
         if ($addIndexPage) {
             $homePage = Entry::findOne(['slug' => '__home__']);
@@ -410,38 +479,76 @@ class MigrationService extends Component
     }
 
 
-    protected function updateFieldLayout(string $sectionHandle, array $layoutElements)
+    protected function updateFieldLayout(string $sectionHandle, array $tabConfigs)
     {
+        // Only create field layout for newly created sections
+        if(!in_array($sectionHandle, $this->doUpdateFieldlayout)) {
+            return true;
+        }
 
-        $layoutElements = collect($layoutElements)
-            ->map(fn($layoutElement) => is_string($layoutElement) ? [$layoutElement, []] : $layoutElement
-            )
-            ->toArray();
+        // Single tab
+        if(isset($tabConfigs[0])) {
+            $tabConfigs = [
+                'Content' => $tabConfigs
+            ];
+        };
+
 
         /** @var Section $section */
         $section = $this->sections[$sectionHandle];
         $layout = $section->entryTypes[0]->getFieldLayout();
         $tab = $layout->getTabs()[0];
 
-        foreach ($tab->getElements() as $element) {
-            if ($element instanceof CustomField) {
-                /** @var CustomField $element */
-                if ($element->getField()->handle === $layoutElements[0][0]) {
-                    $this->message("Layout for $sectionHandle exists");
-                    return true;
-                }
-            }
+        $tabs = [];
+
+//        foreach ($tab->getElements() as $element) {
+//            if ($element instanceof CustomField) {
+//                /** @var CustomField $element */
+//                if ($element->getField()->handle === $layoutElements[0][0]) {
+//                    $this->message("Layout for $sectionHandle exists");
+//                    return true;
+//                }
+//            }
+//        }
+
+        $sortOrder = 1;
+        foreach ($tabConfigs as $label => $layoutElements) {
+            $tab = new FieldLayoutTab();
+            $tab->name = $label;
+            $tab->sortOrder = $sortOrder++;
+            $tab->layout = $layout;
+
+
+            $tab->setElements(collect($layoutElements)
+                ->map(function ($layoutElement) {
+                    if(is_string($layoutElement)) {
+                        $layoutElement = [$layoutElement, []];
+                    }
+
+                    if ($layoutElement[0] === 'titleField')
+                    {
+                        return new TitleField();
+                    }
+
+                    if ($layoutElement[0] === 'lineBreak')
+                    {
+                        return new LineBreak();
+                    }
+
+                    return new CustomField(Craft::$app->fields->getFieldByHandle($layoutElement[0]), $layoutElement[1]);
+                })
+                ->toArray()
+            );
+
+
+
+            $tabs[] = $tab;
         }
 
-
-        $tab->setElements(array_merge($tab->getElements(),
-            collect($layoutElements)
-                ->map(fn($layoutElement) => new CustomField(Craft::$app->fields->getFieldByHandle($layoutElement[0]), $layoutElement[1])
-                )
-                ->toArray()
-        ));
+        $layout->setTabs($tabs);
 
         if (!Craft::$app->fields->saveLayout($layout)) {
+
             $this->logError("Could not save fieldlayout for $sectionHandle", $layout);
             return false;
         }
@@ -473,4 +580,5 @@ class MigrationService extends Component
             Craft::error($model->errors, 'ff/install');
         }
     }
+
 }

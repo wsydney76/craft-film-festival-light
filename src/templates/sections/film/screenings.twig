@@ -1,0 +1,28 @@
+{% set entries = craft.entries
+    .section('screening')
+    .relatedTo(entry)
+    .with('locations')
+    .collect
+%}
+
+{% if entries.count() %}
+    {% include '_layouts/partials/headline.twig' with {
+        text: 'Screenings'
+    } only %}
+
+    <div class="space-y-4">
+        {% for entry in entries %}
+            <div>
+                <div class="font-semibold">
+                    {{ entry.screeningDateTime|date('short') }}
+                </div>
+                <div>
+                    {% for location in entry.locations %}
+                        {{ location.link }}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+{% endif %}

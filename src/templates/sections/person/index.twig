@@ -1,0 +1,59 @@
+{% extends "_layouts/main.twig" %}
+
+{% set featuredImage = entry.featuredImage.one %}
+
+{% block heroArea %}
+    {% if featuredImage %}
+        {% include '_layouts/partials/hero-area-display.twig' with {
+            image: featuredImage,
+            title: entry.title,
+            tagline: entry.tagline
+        } only %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+    {% embed '_layouts/embeds/content-sidebar.twig' with {showHeader: featuredImage == null, alignTitle: 'left'} %}
+        {% block contentTop %}
+            {% include '@ff/sections/person/details.twig' with {
+                entry
+            } only %}
+        {% endblock %}
+
+        {% block sidebarTop %}
+            {% include '@ff/partials/entry-list.twig' with {
+                heading: 'Cast'|t('ff'),
+                query: craft.entries
+                    .section('film')
+                    .relatedTo({targetElement: entry, field: 'cast'})
+            } only %}
+
+            {% include '@ff/partials/entry-list.twig' with {
+                heading: 'Script'|t('ff'),
+                query: craft.entries
+                    .section('film')
+                    .relatedTo({targetElement: entry, field: 'script'})
+            } only %}
+
+            {% include '@ff/partials/entry-list.twig' with {
+                heading: 'Camera'|t('ff'),
+                query: craft.entries
+                    .section('film')
+                    .relatedTo({targetElement: entry, field: 'camera'})
+            } only %}
+
+            {% include '@ff/partials/entry-list.twig' with {
+                heading: 'Director'|t('ff'),
+                query: craft.entries
+                    .section('film')
+                    .relatedTo({targetElement: entry, field: 'director'})
+            } only %}
+
+
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}
+

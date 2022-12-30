@@ -1,0 +1,13 @@
+{% set entries = query.collect %}
+
+{% if entries.count()    %}
+    {% embed "_layouts/embeds/widget.twig" with {heading}%}
+        {% block content %}
+            <ul>
+                {% for entry in entries %}
+                    <li>{{ entry.link }}</li>
+                {% endfor %}
+            </ul>
+        {% endblock %}
+    {% endembed %}
+{% endif %}

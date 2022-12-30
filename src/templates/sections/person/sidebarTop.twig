@@ -1,0 +1,29 @@
+{% include '@ff/partials/sidebar-lists.twig' with {
+    lists: [
+        {
+            heading: 'Cast'|t('ff'),
+            query: craft.entries.section('film').relatedTo({targetElement: entry, field: 'cast'})
+        },
+        {
+            heading: 'Script'|t('ff'),
+            query: craft.entries.section('film').relatedTo({targetElement: entry, field: 'script'})
+        },
+        {
+            heading: 'Camera'|t('ff'),
+            query: craft.entries.section('film').relatedTo({targetElement: entry, field: 'camera'})
+        },
+        {
+            heading: 'Director'|t('ff'),
+            query: craft.entries.section('film').relatedTo({targetElement: entry, field: 'director'})
+        },
+    ]
+} only %}
+
+{% if entry.filmography %}
+    {% embed "_layouts/embeds/widget.twig" with {heading: 'Filmography'|t('ff')} %}
+        {% block content %}
+            {{ entry.filmography|nl2br }}
+        {% endblock %}
+    {% endembed %}
+
+{% endif %}
