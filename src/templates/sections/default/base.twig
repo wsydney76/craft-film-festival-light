@@ -1,6 +1,10 @@
 {% extends "_layouts/main.twig" %}
 
-{% set featuredImage = entry.featuredImage.one %}
+{% set featuredImage = null %}
+
+{% if entry.featuredImage %}
+    {% set featuredImage = entry.featuredImage.one %}
+{% endif %}
 
 {% block heroArea %}
     {% if featuredImage %}
@@ -11,13 +15,3 @@
         } only %}
     {% endif %}
 {% endblock %}
-
-{% block content %}
-
-    {% embed '_layouts/embeds/content-md.twig' with {showHeader: featuredImage == null, alignTitle: 'left'} %}
-
-
-    {% endembed %}
-
-{% endblock %}
-

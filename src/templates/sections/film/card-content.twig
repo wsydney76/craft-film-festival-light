@@ -1,0 +1,11 @@
+<div class="mt-4">
+    {{ entry.tagline }}
+</div>
+{% set entries = entry.cast.collect %}
+<div class="mt-2">
+    {% for entry in entries %}
+        {% if loop.index <= 3 %}
+            {{ entry.lastName }}{{ not loop.last ? ', ' }}
+        {% endif %}
+    {% endfor %}
+</div>

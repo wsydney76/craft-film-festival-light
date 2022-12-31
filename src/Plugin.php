@@ -5,9 +5,12 @@ namespace wsydney76\ff;
 use Craft;
 use craft\base\Model;
 use craft\base\Plugin as BasePlugin;
+use craft\elements\Entry;
+use craft\events\DefineBehaviorsEvent;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\helpers\App;
 use craft\web\View;
+use wsydney76\ff\behaviors\EntryBehavior;
 use wsydney76\ff\models\Settings;
 use wsydney76\ff\services\MigrationService;
 use yii\base\Event;
@@ -66,6 +69,14 @@ class Plugin extends BasePlugin
             function(RegisterTemplateRootsEvent $event) {
                 $event->roots['ff'] = $this->getBasePath() . '/templates';
                 $event->roots['@ff'] = $this->getBasePath() . '/templates';
+            }
+        );
+
+        Event::on(
+            Entry::class,
+            Entry::EVENT_DEFINE_BEHAVIORS,
+            function(DefineBehaviorsEvent $event) {
+                $event->behaviors[] = EntryBehavior::class;
             }
         );
     }

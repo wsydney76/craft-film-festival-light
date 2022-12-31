@@ -1,0 +1,15 @@
+{% include '_layouts/partials/cards.twig' with {
+    heading: 'Films'|t('ff'),
+    wide: false,
+    query: craft.entries
+        .section('film')
+        .relatedTo({targetElement: entry, field: fieldHandle})
+        .with([
+            ['cast', {limit: 3}]
+        ])
+
+} only %}
+
+{% include '@ff/sections/film/screenings.twig' with {
+    entry
+} only %}

@@ -113,7 +113,15 @@ class MigrationService extends Component
                 'addIndexPage' => true,
                 'createEntriesField' => true,
                 'template' => 'ff/sections/default/sidebar'
-             ]) &&
+            ]) &&
+
+            $this->createSection([
+                'name' => 'Language',
+                'plural' => 'Languages',
+                'addIndexPage' => false,
+                'createEntriesField' => true,
+                'template' => 'ff/sections/default/md'
+            ]) &&
 
             $this->createSection([
                 'type' => Section::TYPE_STRUCTURE,
@@ -128,14 +136,14 @@ class MigrationService extends Component
                 'name' => 'Country',
                 'plural' => 'Countries',
                 'createEntriesField' => true,
-                'template' => 'ff/sections/default/xl'
+                'template' => 'ff/sections/default/md'
             ]) &&
 
             $this->createSection([
                 'name' => 'Genre',
                 'plural' => 'Genres',
                 'createEntriesField' => true,
-                'template' => 'ff/sections/default/xl'
+                'template' => 'ff/sections/default/md'
             ]) &&
 
             $this->createSection([
@@ -164,7 +172,7 @@ class MigrationService extends Component
                 'plural' => 'Topics',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
-                'template' => 'ff/sections/default/xl'
+                'template' => 'ff/sections/default/md'
             ]) &&
 
             $this->createSection([
@@ -229,6 +237,19 @@ class MigrationService extends Component
             'groupId' => $fieldGroup->id,
             'handle' => 'releaseYear',
             'name' => 'Release Year',
+            'previewFormat' => Number::FORMAT_NONE
+        ]);
+
+
+        $languageSection = Craft::$app->sections->getSectionByHandle('language');
+        $this->createField([
+            'class' => Entries::class,
+            'groupId' => $fieldGroup->id,
+            'name' => 'Subtitle Languages',
+            'handle' => 'subtitleLanguages',
+            'sources' => [
+                "section:$languageSection->uid"
+            ]
         ]);
 
         $this->createField([
@@ -243,6 +264,31 @@ class MigrationService extends Component
             'groupId' => $fieldGroup->id,
             'handle' => 'lastName',
             'name' => 'Last Name'
+        ]);
+
+        $this->createField([
+            'class' => Number::class,
+            'groupId' => $fieldGroup->id,
+            'handle' => 'fsk',
+            'name' => 'FSK'
+        ]);
+
+        $this->createField([
+            'class' => Number::class,
+            'groupId' => $fieldGroup->id,
+            'handle' => 'runtime',
+            'name' => 'Runtime',
+            'min' => 5,
+            'max' => 600,
+            'suffix' => 'minutes',
+            'decimals' => 0,
+        ]);
+
+        $this->createField([
+            'class' => PlainText::class,
+            'groupId' => $fieldGroup->id,
+            'handle' => 'originalTitle',
+            'name' => 'Original title'
         ]);
 
         $volume = Craft::$app->volumes->getVolumeByHandle('images');
@@ -313,11 +359,21 @@ class MigrationService extends Component
     {
         $this->updateFieldLayout('film', [
             'Content' => [
-                'featuredImage', 'tagline', 'filmPoster',
-                'filmSections', 'competitions', 'topics', 'sponsors',
-                'countries', 'genres', 'releaseYear',
+                'originalTitle',
+                ['featuredImage', ['width' => 25, 'required' => true]], ['filmPoster', ['width' => 25]],
+                'tagline',
+                ['filmSections', ['width' => 25]], ['competitions', ['width' => 25]],
+                ['topics', ['width' => 25]], ['sponsors', ['width' => 25]],
                 'bodyContent'
             ],
+            'Details' => [
+                ['fsk', ['width' => 25]], ['runtime', ['width' => 25]],
+                ['releaseYear', ['width' => 25]],
+                'lineBreak',
+                ['genres', ['width' => 25]], ['countries', ['width' => 25]],
+                ['languages', ['width' => 25]], ['subtitleLanguages', ['width' => 25]],
+            ],
+
             'Crew' => [
                 'cast', 'script', 'camera', 'director',
             ]
@@ -357,7 +413,7 @@ class MigrationService extends Component
         ]);
 
         $this->updateFieldLayout('screening', [
-           'films', 'locations', 'screeningDateTime'
+            'films', 'locations', 'screeningDateTime'
         ]);
     }
 
@@ -426,7 +482,8 @@ class MigrationService extends Component
                 'slug' => $baseUri,
                 'parent' => $homePage,
                 'fields' => [
-                    'sections' => $handle
+                    'sections' => $handle,
+                    'cardContentTemplateRoot' => '@ff/sections'
                 ],
                 'localized' => [
                     'de' => [
@@ -482,12 +539,12 @@ class MigrationService extends Component
     protected function updateFieldLayout(string $sectionHandle, array $tabConfigs)
     {
         // Only create field layout for newly created sections
-        if(!in_array($sectionHandle, $this->doUpdateFieldlayout)) {
+        if (!in_array($sectionHandle, $this->doUpdateFieldlayout)) {
             return true;
         }
 
         // Single tab
-        if(isset($tabConfigs[0])) {
+        if (isset($tabConfigs[0])) {
             $tabConfigs = [
                 'Content' => $tabConfigs
             ];
@@ -520,18 +577,16 @@ class MigrationService extends Component
 
 
             $tab->setElements(collect($layoutElements)
-                ->map(function ($layoutElement) {
-                    if(is_string($layoutElement)) {
+                ->map(function($layoutElement) {
+                    if (is_string($layoutElement)) {
                         $layoutElement = [$layoutElement, []];
                     }
 
-                    if ($layoutElement[0] === 'titleField')
-                    {
+                    if ($layoutElement[0] === 'titleField') {
                         return new TitleField();
                     }
 
-                    if ($layoutElement[0] === 'lineBreak')
-                    {
+                    if ($layoutElement[0] === 'lineBreak') {
                         return new LineBreak();
                     }
 
@@ -539,7 +594,6 @@ class MigrationService extends Component
                 })
                 ->toArray()
             );
-
 
 
             $tabs[] = $tab;

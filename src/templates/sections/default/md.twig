@@ -1,0 +1,29 @@
+{% extends "@ff/sections/default/base.twig" %}
+
+{% block content %}
+
+    {% embed '_layouts/embeds/content-md.twig' with {showHeader: featuredImage == null, alignTitle: 'left'} %}
+
+        {% block contentTop %}
+
+            <div class="mt-8">
+                {% include "@ff/sections/#{entry.section.handle}/content-top.twig" ignore missing with {
+                    entry
+                } only %}
+            </div>
+
+        {% endblock %}
+
+        {% block contentBottom %}
+
+            {% include "@ff/sections/#{entry.section.handle}/content-bottom.twig" ignore missing with {
+                entry
+            } only %}
+
+
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}
+

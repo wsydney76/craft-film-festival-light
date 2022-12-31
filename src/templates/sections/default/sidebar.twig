@@ -1,16 +1,6 @@
-{% extends "_layouts/main.twig" %}
+{% extends "@ff/sections/default/base.twig" %}
 
-{% set featuredImage = entry.featuredImage.one %}
 
-{% block heroArea %}
-    {% if featuredImage %}
-        {% include '_layouts/partials/hero-area-display.twig' with {
-            image: featuredImage,
-            title: entry.title,
-            tagline: entry.tagline
-        } only %}
-    {% endif %}
-{% endblock %}
 
 {% block content %}
 
@@ -19,7 +9,7 @@
         {% block contentTop %}
 
            <div class="mt-8">
-               {% include "@ff/sections/#{entry.section.handle}/contentTop.twig" ignore missing with {
+               {% include "@ff/sections/#{entry.section.handle}/content-top.twig" ignore missing with {
                    entry
                } only %}
            </div>
@@ -28,7 +18,7 @@
 
         {% block contentBottom %}
 
-            {% include "@ff/sections/#{entry.section.handle}/contentBottom.twig" ignore missing with {
+            {% include "@ff/sections/#{entry.section.handle}/content-bottom.twig" ignore missing with {
                 entry
             } only %}
 
@@ -36,13 +26,13 @@
         {% endblock %}
 
         {% block sidebarTop %}
-            {% include "@ff/sections/#{entry.section.handle}/sidebarTop.twig" ignore missing with {
+            {% include "@ff/sections/#{entry.section.handle}/sidebar-top.twig" ignore missing with {
                 entry
             } only %}
         {% endblock %}
 
         {% block sidebarBottom %}
-            {% include "@ff/sections/#{entry.section.handle}/sidebarBottom.twig" ignore missing with {
+            {% include "@ff/sections/#{entry.section.handle}/sidebar-bottom.twig" ignore missing with {
                 entry
             } only %}
         {% endblock %}

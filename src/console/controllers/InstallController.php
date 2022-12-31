@@ -123,6 +123,27 @@ class InstallController extends SeedController
             'slug' => 'kreissparkasse recklinghausen-sued'
         ]);
 
+        $language1 = $this->createEntry([
+            'section' => 'language',
+            'type' => 'default',
+            'title' => 'English',
+            'slug' => 'english'
+        ]);
+
+        $language2 = $this->createEntry([
+            'section' => 'language',
+            'type' => 'default',
+            'title' => 'German',
+            'slug' => 'german'
+        ]);
+
+        $language3 = $this->createEntry([
+            'section' => 'language',
+            'type' => 'default',
+            'title' => 'French',
+            'slug' => 'french'
+        ]);
+
         $location = $this->createEntry([
             'section' => 'location',
             'type' => 'default',
@@ -138,8 +159,8 @@ class InstallController extends SeedController
         $film = $this->createEntry([
             'section' => 'film',
             'type' => 'default',
-            'title' => 'The Mother of All Movies',
-            'slug' => 'the-mother-of-all-moview',
+            'title' => 'Die Mutter aller Filme',
+            'slug' => 'die-mutter-aller-filme',
             'fields' => [
                 'tagline' => 'You never saw something like this',
                 'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
@@ -152,6 +173,12 @@ class InstallController extends SeedController
                 'director' => [$person2->id],
                 'filmSections' => [$filmSection->id],
                 'sponsors' => [$sponsor->id],
+                'languages' => [$language1->id],
+                'subtitleLanguages' => [$language2->id, $language3->id],
+                'runtime' => 135,
+                'fsk' => 16,
+                'releaseYear' => 1989,
+                'originalTitle' => 'The mother of all movies',
                 'bodyContent' => $this->getBodyContent($faker)
             ],
         ]);
