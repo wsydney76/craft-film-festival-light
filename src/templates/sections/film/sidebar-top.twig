@@ -1,42 +1,46 @@
+{% set settings = craft.app.plugins.plugin('ff').settings %}
+
 {% embed "_layouts/embeds/widget.twig" with {heading : 'People'|t('ff')} %}
     {% block content %}
         {% from '_layouts/macros/lib.twig' import img %}
         {% set transform = {width: 40, height: 40, format: 'webp'} %}
 
         <div class="space-y-4">
-            {% for list in [{heading: 'Cast'|t('ff'), query: entry.cast},
-                {heading: 'Script'|t('ff'), query: entry.script},
-                {heading: 'Camera'|t('ff'), query: entry.camera},
-                {heading: 'Director'|t('ff'), query: entry.director}] %}
+            {% for list in [{heading: 'Cast'|t('ff'), query: entry.cast, enabled: true},
+                {heading: 'Script'|t('ff'), query: entry.script, enabled: settings.enableScript},
+                {heading: 'Camera'|t('ff'), query: entry.camera, enabled: settings.enableCamera},
+                {heading: 'Director'|t('ff'), query: entry.director, enabled: true}] %}
 
-                {% set people = list.query
-                    .with([
-                        ['photo', {withTransforms: [transform]}]
-                    ])
-                .collect %}
+                {% if list.enabled %}
+                    {% set people = list.query
+                        .with([
+                            ['photo', {withTransforms: [transform]}]
+                        ])
+                    .collect %}
 
-                {% if people %}
-                    <div>
-                        <div class="font-semibold mb-1 text-lg">{{ list.heading }}</div>
-                        <div class="space-y-2">
-                            {% for person in people %}
-                                <div class="flex space-x-4 items-center">
-                                    {% set photo = person.photo.one %}
-                                    {% if photo %}
-                                        {{ img(photo, {
-                                            transform: transform,
-                                            attr: {
-                                                class: 'rounded-md'
-                                            }
-                                        }) }}
-                                    {% endif %}
-                                    <div>
-                                        {{ person.link }}
+                    {% if people %}
+                        <div>
+                            <div class="font-semibold mb-1 text-lg">{{ list.heading }}</div>
+                            <div class="space-y-2">
+                                {% for person in people %}
+                                    <div class="flex space-x-4 items-center">
+                                        {% set photo = person.photo.one %}
+                                        {% if photo %}
+                                            {{ img(photo, {
+                                                transform: transform,
+                                                attr: {
+                                                    class: 'rounded-md'
+                                                }
+                                            }) }}
+                                        {% endif %}
+                                        <div>
+                                            {{ person.link }}
+                                        </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 {% endif %}
 
             {% endfor %}
@@ -45,11 +49,11 @@
 {% endembed %}
 
 {% include '@ff/partials/sidebar-lists.twig' with {
-	lists: [
-        {heading: 'Section'|t('ff'), query: entry.filmSections},
-        {heading: 'Competition'|t('ff'), query: entry.competitions},
-        {heading: 'Topic'|t('ff'), query: entry.topics},
-        {heading: 'Sponsor'|t('ff'), query: entry.sponsors},
+    lists: [
+        {heading: 'Section'|t('ff'), query: entry.filmSections, enabled: settings.enableSections},
+        {heading: 'Competition'|t('ff'), query: entry.competitions, enabled: settings.enableCompetitions},
+        {heading: 'Topic'|t('ff'), query: entry.topics, enabled: settings.enableTopics},
+        {heading: 'Sponsor'|t('ff'), query: entry.sponsors, enabled: settings.enableSponsors},
     ]
 } only %}
 

@@ -1,3 +1,9 @@
 {% include '@ff/sections/film/screenings.twig' with {
     entry
 } only %}
+
+{% if craft.app.plugins.plugin('ff').settings.enableCreditedWith %}
+    {% include '@ff/sections/person/credited-with.twig' with {
+        entry
+    } only %}
+{% endif %}

@@ -3,4 +3,90 @@
 
 {% import '_includes/forms.twig' as forms %}
 
-{# ... #}
+
+<div class="readable">
+    <blockquote class="note tip">
+        <p>Disable the following sections if you do not use them.</p>
+        <p>This will avoid unnecessary database queries and will make the site (a little) faster.</p>
+        <p>This will not remove the fields from the field layout. Do that manually.</p>
+    </blockquote>
+</div>
+
+<div class="readable" style="margin-top: 24px;">
+    <blockquote class="note warning">
+        <p>Do not delete the fields themselves.</p>
+    </blockquote>
+</div>
+
+{{ forms.lightswitchField({
+    label: 'Enable Sections',
+    name: 'enableSections',
+    on: settings.enableSections
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Enable Competitions',
+    name: 'enableCompetitions',
+    on: settings.enableCompetitions
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Enable Sponsors',
+    name: 'enableSponsors',
+    on: settings.enableSponsors
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Enable Topics',
+    name: 'enableTopics',
+    on: settings.enableTopics
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Enable Camera',
+    name: 'enableCamera',
+    on: settings.enableCamera
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Enable Script',
+    name: 'enableScript',
+    on: settings.enableScript
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Enable Genres',
+    name: 'enableGenres',
+    on: settings.enableGenres
+}) }}
+
+
+{{ forms.lightswitchField({
+    label: 'Enable Countries',
+    name: 'enableCountries',
+    on: settings.enableCountries
+}) }}
+{{ forms.lightswitchField({
+    label: 'Enable FilmPoster',
+    name: 'enableFilmPoster',
+    on: settings.enableFilmPoster
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Enable Languages',
+    name: 'enableLanguages',
+    on: settings.enableLanguages
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Enable Subtitle Languages',
+    name: 'enableSubtitleLanguages',
+    instructions: 'Ignored if languages are disabled',
+    on: settings.enableSubtitleLanguages
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Enable Credited With',
+    name: 'enableCreditedWith',
+    on: settings.enableCreditedWith
+}) }}

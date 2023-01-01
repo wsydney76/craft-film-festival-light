@@ -4,6 +4,7 @@ namespace wsydney76\ff\console\controllers;
 
 use Craft;
 use craft\console\Controller;
+use craft\helpers\Console;
 use DateTime;
 use Faker\Factory;
 use modules\main\console\controllers\SeedController;
@@ -177,8 +178,7 @@ class InstallController extends SeedController
                 'subtitleLanguages' => [$language2->id, $language3->id],
                 'runtime' => 135,
                 'fsk' => 16,
-                'releaseYear' => 1989,
-                'originalTitle' => 'The mother of all movies',
+                'releaseYear' => 1989,                'originalTitle' => 'The mother of all movies',
                 'bodyContent' => $this->getBodyContent($faker)
             ],
         ]);
@@ -206,6 +206,43 @@ class InstallController extends SeedController
                 'screeningDateTime' => new DateTime('2022-12-31 19:45')
             ],
         ]);
+
+        return ExitCode::OK;
+    }
+
+    public function actionTest(): int
+    {
+
+        $config = Craft::$app->projectConfig->get('elementSources');
+        $section = Craft::$app->sections->getSectionByHandle('film');
+        $field = Craft::$app->fields->getFieldByHandle('cast');
+        Console::output($section->uid);
+
+        $config['craft\\elements\\Entry'][] = [
+            'disabled' => false,
+            'key' => "section:$section->uid",
+            'tableAttributes' => [
+                "field:$field->uid",
+                'slug',
+                'postDate',
+                'link'
+            ],
+            'type' => 'native'
+        ];
+
+        Craft::$app->projectConfig->set('elementSources', $config);
+
+//        foreach ($config as $type => $sources) {
+//            if ($type === 'craft\\elements\\Entry') {
+//                foreach ($sources as  $key => $source) {
+//                    if ($source['type'] === 'native' && $source['key'] === "section:$section->uid") {
+//                        $config[$type][$key]['tableAttributes'] = [
+//                          'slug'
+//                        ];
+//                    }
+//                }
+//            }
+//        }
 
         return ExitCode::OK;
     }

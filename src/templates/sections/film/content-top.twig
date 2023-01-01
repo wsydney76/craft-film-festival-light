@@ -1,5 +1,13 @@
 {% from '_layouts/macros/lib.twig' import img %}
-{% set image = entry.filmPoster.one() %}
+
+{% set settings = craft.app.plugins.plugin('ff').settings %}
+{% set image = null %}
+
+{% if settings.enableFilmPoster %}
+    {% set image = entry.filmPoster.one() %}
+{% endif %}
+
+{% set settings = craft.app.plugins.plugin('ff').settings %}
 
 <div class="flex space-x-8">
     {% if image %}
@@ -11,22 +19,26 @@
     {% endif %}
     <div class="font-semibold text-xl space-y-2">
 
-        {% set genres = entry.genres.collect %}
-        {% if genres %}
-            <div>
-                {% for genre in genres %}
-                    {{ genre.link }}{{ not loop.last ? ', ' }}
-                {% endfor %}
-            </div>
+        {% if settings.enableGenres %}
+            {% set genres = entry.genres.collect %}
+            {% if genres %}
+                <div>
+                    {% for genre in genres %}
+                        {{ genre.link }}{{ not loop.last ? ', ' }}
+                    {% endfor %}
+                </div>
+            {% endif %}
         {% endif %}
 
-        {% set countries = entry.countries.collect %}
-        {% if countries %}
-            <div>
-                {% for country in countries %}
-                    {{ country.link }}{{ not loop.last ? ', ' }}
-                {% endfor %}
-            </div>
+        {% if settings.enableCountries %}
+            {% set countries = entry.countries.collect %}
+            {% if countries %}
+                <div>
+                    {% for country in countries %}
+                        {{ country.link }}{{ not loop.last ? ', ' }}
+                    {% endfor %}
+                </div>
+            {% endif %}
         {% endif %}
 
         {% if entry.releaseYear %}
@@ -41,23 +53,29 @@
             </div>
         {% endif %}
 
-        {% set languages = entry.languages.collect %}
-        {% if languages %}
-            <div>
-                {{ "Language"|t('ff') }}:
-                {% for language in languages %}
-                    {{ language.link }}{{ not loop.last ? ', ' -}}
-                {% endfor -%}
-                {% set subtitleLanguages = entry.subtitleLanguages.collect %}
-                {%- if subtitleLanguages -%}
-                    , {{ 'subtitles in'|t('ff') }}
-                    {% for subtitleLanguage in subtitleLanguages %}
-                        {{ subtitleLanguage.link }}{{ not loop.last ? ', ' }}
-                    {% endfor %}
-                {% endif %}
-            </div>
+        {% if settings.enableLanguages %}
+            {% set languages = entry.languages.collect %}
+            {% if languages %}
+                <div>
+                    {{ "Language"|t('ff') }}:
+                    {% for language in languages %}
+                        {{ language.link }}{{ not loop.last ? ', ' -}}
+                    {% endfor -%}
+                    
+                    {% if settings.enableSubtitleLanguages %}
+                        {% set subtitleLanguages = entry.subtitleLanguages.collect %}
+                        {%- if subtitleLanguages -%}
+                            , {{ 'subtitles in'|t('ff') }}
+                            {% for subtitleLanguage in subtitleLanguages %}
+                                {{ subtitleLanguage.link }}{{ not loop.last ? ', ' }}
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                    
+                </div>
 
 
+            {% endif %}
         {% endif %}
 
     </div>

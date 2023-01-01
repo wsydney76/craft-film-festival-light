@@ -1,0 +1,10 @@
+{% include '_layouts/partials/cards.twig' with {
+    heading: 'Credited With'|t('ff'),
+    query: craft.entries
+        .section('person')
+        .id("not #{entry.id}")
+        .relatedTo({sourceElement: craft.entries
+            .section('film')
+            .relatedTo({targetElement: entry.id})
+        .ids})
+} only %}

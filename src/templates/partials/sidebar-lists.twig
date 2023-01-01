@@ -1,3 +1,5 @@
 {% for list in lists %}
-	{% include '_widgets/entries-list.twig' with {heading: list.heading, query: list.query} %}
+    {% if list.enabled %}
+        {% include '_widgets/entries-list.twig' with {heading: list.heading, query: list.query} %}
+    {% endif %}
 {% endfor %}
