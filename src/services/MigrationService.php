@@ -14,6 +14,7 @@ use craft\fields\Date;
 use craft\fields\Entries;
 use craft\fields\Number;
 use craft\fields\PlainText;
+use craft\fields\Time;
 use craft\helpers\Console;
 use craft\models\FieldGroup;
 use craft\models\FieldLayout;
@@ -50,11 +51,35 @@ class MigrationService extends Component
     {
         // Craft::$app->runAction('gc', ['interactive' => false]);
 
+        $this->createPages() &&
         $this->createFieldGroup() &&
         $this->createSections() &&
         $this->createFields() &&
         $this->updateFieldLayouts();
 
+        return true;
+    }
+
+
+    private function createPages()
+    {
+        $homePage = Entry::findOne(['slug' => '__home__']);
+        MainModule::getInstance()->content->createEntry([
+            'section' => 'page',
+            'type' => 'pageTemplate',
+            'title' => 'Program',
+            'slug' => 'program',
+            'parent' => $homePage,
+            'fields' => [
+                'pageTemplate' => '@ff/partials/program.twig',
+            ],
+            'localized' => [
+                'de' => [
+                    'title' => 'Programm',
+                    'slug' => 'programm',
+                ]
+            ]
+        ]);
         return true;
     }
 
@@ -178,7 +203,7 @@ class MigrationService extends Component
             $this->createSection([
                 'name' => 'Screening',
                 'plural' => 'screenings',
-                'titleFormat' => '{films.one.title} - {locations.one.title} - {screeningDateTime|datetime(\'short\')}',
+                'titleFormat' => '{films.one.title} - {locations.one.title} - {screeningDate|date(\'Y-m-d\')}:{screeningTime|time(\'H:i\')}',
                 'template' => 'ff/sections/default/md'
             ])
         );
@@ -250,6 +275,14 @@ class MigrationService extends Component
             'sources' => [
                 "section:$languageSection->uid"
             ]
+        ]);
+
+        $this->createField([
+            'class' => PlainText::class,
+            'groupId' => $fieldGroup->id,
+            'name' => 'Abbreviation',
+            'handle' => 'abbreviation',
+            'charLimit' => 3
         ]);
 
         $this->createField([
@@ -346,9 +379,17 @@ class MigrationService extends Component
         $this->createField([
             'class' => Date::class,
             'groupId' => $fieldGroup->id,
-            'handle' => 'screeningDateTime',
-            'name' => 'Screening Date and Time',
-            'showTime' => true,
+            'handle' => 'screeningDate',
+            'name' => 'Screening Date',
+            'showDate' => true,
+            'showTime' => false
+        ]);
+
+        $this->createField([
+            'class' => Time::class,
+            'groupId' => $fieldGroup->id,
+            'handle' => 'screeningTime',
+            'name' => 'Screening Time',
             'minuteIncrement' => 15
         ]);
 
@@ -393,7 +434,9 @@ class MigrationService extends Component
         ]);
 
         $this->updateFieldLayout('location', [
-            'featuredImage', 'tagline', 'bodyContent'
+            'featuredImage', 'tagline',
+            'postalAddress', 'phoneNumber', 'email',
+            'bodyContent'
         ]);
 
         $this->updateFieldLayout('competition', [
@@ -412,8 +455,14 @@ class MigrationService extends Component
             'heroArea', 'featuredImage', 'tagline', 'bodyContent'
         ]);
 
+        $this->updateFieldLayout('language', [
+            ['abbreviation', ['required' => true]]
+        ]);
+
         $this->updateFieldLayout('screening', [
-            'films', 'locations', 'screeningDateTime'
+            'films', 'locations',
+            ['screeningDate', ['width' => 25, 'required' => true]],
+            ['screeningTime', ['width' => 25, 'required' => true]],
         ]);
     }
 

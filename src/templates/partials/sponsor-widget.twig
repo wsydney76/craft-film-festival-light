@@ -1,0 +1,29 @@
+
+{% set entries = query.collect %}
+
+{% if entries.count() %}
+    {% embed "_layouts/embeds/widget.twig"  with {heading: 'Sponsor'|t('ff')} %}
+    	{% block content %}
+            {% from '_layouts/macros/lib.twig' import img %}
+            <div class="space-y-4">
+                {% for entry in entries %}
+                    <a class="block space-y-2" href="{{ entry.url }}">
+                        {% set image = entry.featuredImage.one() %}
+                        {% if image %}
+                            {{ img(image, {
+                                transform: { width: 300, height: 100, format: 'webp'}
+                            }) }}
+                        {% endif %}
+                        <div class="font-bold">
+                            {{ entry.title }}
+                        </div>
+                        <div>
+                            {{ entry.tagline }}
+                        </div>
+                    </a>
+
+                {% endfor %}
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endif %}

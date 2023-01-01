@@ -1,6 +1,7 @@
 {% extends "_layouts/main.twig" %}
 
 {% set featuredImage = null %}
+{% set settings = craft.app.plugins.plugin('ff').settings %}
 
 {% if entry.featuredImage %}
     {% set featuredImage = entry.featuredImage.one %}

@@ -15,7 +15,7 @@ class EntryBehavior extends Behavior
 
         $query = Entry::find()
             ->section('screening')
-            ->orderBy('screeningDateTime');
+            ->orderBy('screeningDate, screeningTime');
 
         switch ($entry->section->handle) {
 

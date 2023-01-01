@@ -10,7 +10,7 @@
 
            <div class="mt-8">
                {% include "@ff/sections/#{entry.section.handle}/content-top.twig" ignore missing with {
-                   entry
+                   entry, settings
                } only %}
            </div>
 
@@ -19,7 +19,7 @@
         {% block contentBottom %}
 
             {% include "@ff/sections/#{entry.section.handle}/content-bottom.twig" ignore missing with {
-                entry
+                entry, settings
             } only %}
 
 
@@ -27,13 +27,13 @@
 
         {% block sidebarTop %}
             {% include "@ff/sections/#{entry.section.handle}/sidebar-top.twig" ignore missing with {
-                entry
+                entry, settings
             } only %}
         {% endblock %}
 
         {% block sidebarBottom %}
             {% include "@ff/sections/#{entry.section.handle}/sidebar-bottom.twig" ignore missing with {
-                entry
+                entry, settings
             } only %}
         {% endblock %}
 

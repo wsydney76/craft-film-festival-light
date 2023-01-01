@@ -3,14 +3,18 @@
 
 {% import '_includes/forms.twig' as forms %}
 
+{{ forms.textField({
+    label: 'Template Root',
+    name: 'templateRoot',
+    instructions: 'Enter a root relative to your templates directory, if you want to use your own templates.',
+    value: settings.templateRoot
+}) }}
 
-<div class="readable">
-    <blockquote class="note tip">
-        <p>Disable the following sections if you do not use them.</p>
-        <p>This will avoid unnecessary database queries and will make the site (a little) faster.</p>
-        <p>This will not remove the fields from the field layout. Do that manually.</p>
-    </blockquote>
-</div>
+
+
+        <p>Disable the following sections if you do not use them.
+            This will avoid unnecessary database queries and will make the site (a little) faster.</p>
+        <p>This will not remove the fields from the field layout. Do that manually. Existing content will not be touched.</p>
 
 <div class="readable" style="margin-top: 24px;">
     <blockquote class="note warning">

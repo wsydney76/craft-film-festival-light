@@ -1,5 +1,3 @@
-{% set settings = craft.app.plugins.plugin('ff').settings %}
-
 {% embed "_layouts/embeds/widget.twig" with {heading : 'People'|t('ff')} %}
     {% block content %}
         {% from '_layouts/macros/lib.twig' import img %}
@@ -52,8 +50,12 @@
     lists: [
         {heading: 'Section'|t('ff'), query: entry.filmSections, enabled: settings.enableSections},
         {heading: 'Competition'|t('ff'), query: entry.competitions, enabled: settings.enableCompetitions},
-        {heading: 'Topic'|t('ff'), query: entry.topics, enabled: settings.enableTopics},
-        {heading: 'Sponsor'|t('ff'), query: entry.sponsors, enabled: settings.enableSponsors},
+        {heading: 'Topic'|t('ff'), query: entry.topics, enabled: settings.enableTopics}
     ]
 } only %}
 
+{% if settings.enableSponsors %}
+    {% include '@ff/partials/sponsor-widget.twig' with {
+    	query: entry.sponsors
+    } only %}
+{% endif %}

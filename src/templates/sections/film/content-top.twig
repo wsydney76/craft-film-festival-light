@@ -1,19 +1,21 @@
 {% from '_layouts/macros/lib.twig' import img %}
 
-{% set settings = craft.app.plugins.plugin('ff').settings %}
+
 {% set image = null %}
 
 {% if settings.enableFilmPoster %}
     {% set image = entry.filmPoster.one() %}
 {% endif %}
 
-{% set settings = craft.app.plugins.plugin('ff').settings %}
 
 <div class="flex space-x-8">
     {% if image %}
         <div>
             {{ img(image, {
-                transform: {width: 150, height: 200, format: 'webp'}
+                transform: {width: 175, height: 225, format: 'webp'},
+                attr: {
+                    class: 'rounded shadow-xl'
+                }
             }) }}
         </div>
     {% endif %}
@@ -46,6 +48,12 @@
                 {{ entry.releaseYear }}
             </div>
         {% endif %}
+
+        {% if entry.runtime %}
+            <div>
+                {{ "Runtime"|t('ff') }} {{ entry.runtime}} {{ "minutes"|t('ff') }}
+            </div>
+        {% endif %}
         
         {% if entry.fsk %}
             <div>
@@ -55,7 +63,7 @@
 
         {% if settings.enableLanguages %}
             {% set languages = entry.languages.collect %}
-            {% if languages %}
+            {% if languages.count() %}
                 <div>
                     {{ "Language"|t('ff') }}:
                     {% for language in languages %}
@@ -64,7 +72,7 @@
                     
                     {% if settings.enableSubtitleLanguages %}
                         {% set subtitleLanguages = entry.subtitleLanguages.collect %}
-                        {%- if subtitleLanguages -%}
+                        {%- if subtitleLanguages.count() -%}
                             , {{ 'subtitles in'|t('ff') }}
                             {% for subtitleLanguage in subtitleLanguages %}
                                 {{ subtitleLanguage.link }}{{ not loop.last ? ', ' }}
@@ -73,8 +81,6 @@
                     {% endif %}
                     
                 </div>
-
-
             {% endif %}
         {% endif %}
 

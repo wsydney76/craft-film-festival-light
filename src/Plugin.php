@@ -67,8 +67,12 @@ class Plugin extends BasePlugin
             View::class,
             View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS,
             function(RegisterTemplateRootsEvent $event) {
-                $event->roots['ff'] = $this->getBasePath() . '/templates';
-                $event->roots['@ff'] = $this->getBasePath() . '/templates';
+                $templateRoot = $this->settings->templateRoot ?
+                    App::parseEnv('@templates/' . $this->settings->templateRoot) :
+                    $this->getBasePath() . '/templates';
+
+                $event->roots['ff'] = $templateRoot;
+                $event->roots['@ff'] = $templateRoot;
             }
         );
 

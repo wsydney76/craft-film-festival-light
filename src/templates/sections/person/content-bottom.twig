@@ -2,7 +2,7 @@
     entry
 } only %}
 
-{% if craft.app.plugins.plugin('ff').settings.enableCreditedWith %}
+{% if settings.enableCreditedWith %}
     {% include '@ff/sections/person/credited-with.twig' with {
         entry
     } only %}

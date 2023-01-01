@@ -1,6 +1,16 @@
-{% set entries = entry.screenings.collect %}
+{% set settings = settings ?? craft.app.plugins.plugin('ff').settings %}
 
-{% set section = entry.section.handle %}
+{% set query = entry.screenings %}
+
+{% if entry.section.handle != 'film' %}
+    {% do query.andWith('films') %}
+{% endif %}
+
+{% if entry.section.handle != 'location' %}
+    {% do query.andWith('locations') %}
+{% endif %}
+
+{% set entries = query.collect %}
 
 {% if entries.count() %}
     {% include '_layouts/partials/headline.twig' with {
@@ -9,18 +19,21 @@
 
     <div class="flex flex-wrap">
         {% for entry in entries %}
-            <div class="mb-4 mr-4 p-8  shadow-xl {{ entry.screeningDateTime > now ? 'bg-primary' : 'bg-gray-600' }} text-white space-y-4">
+            <div class="mb-4 mr-4 p-8 rounded shadow-xl {{ entry.screeningDate|date_modify('-1 day') > now ? 'bg-primary' : 'bg-gray-600' }} text-white space-y-4">
                 <div class="font-semibold">
-                    {{ entry.screeningDateTime|datetime('short') }}
+                    {{ entry.screeningDate|date('short') }} {{ entry.screeningDate|time('short') }}
                 </div>
-                {% if section != 'film' %}
-                    <div class="text-lg underline uppercase">
+                {% if entry.section.handle != 'film' %}
+                    <div >
                         {% for film in entry.films %}
-                            {{ film.link }}
+                            <div class="text-lg underline uppercase">
+                                {{ film.link }}
+                            </div>
                         {% endfor %}
                     </div>
                 {% endif %}
-                {% if section != 'location' %}
+                
+                {% if entry.section.handle != 'location' %}
                     <div>
                         {% for location in entry.locations %}
                             {{ location.link }}

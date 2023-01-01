@@ -1,3 +1,5 @@
+{% set settings = settings ?? craft.app.plugins.plugin('ff').settings %}
+
 {% include '_layouts/partials/cards.twig' with {
     heading: 'Films'|t('ff'),
     wide: false,
@@ -11,5 +13,5 @@
 } only %}
 
 {% include '@ff/sections/film/screenings.twig' with {
-    entry
+    entry, settings
 } only %}

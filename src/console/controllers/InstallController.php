@@ -58,11 +58,19 @@ class InstallController extends SeedController
                 'lastName' => 'Klawuppke',
                 'tagline' => 'Shooting Star',
                 'birthday' => new DateTime('1986-04-09'),
-                'shortBio' => 'Erna studied in Kleinfinstenich and New York',
+                'shortBio' => 'Erna studied in Kleinfinstenich and New York.',
                 'filmography' => 'Tbd.',
                 'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
                 'photo' => [$this->getRandomImage(200)->id],
                 'bodyContent' => $this->getBodyContent($faker)
+            ],
+            'localized' => [
+                'de' => [
+                    'fields' => [
+                        'tagline' => 'Senkrechtstarterin',
+                        'shortBio' => 'Erna studierte in Kleinfinstenich und New York.',
+                    ]
+                ]
             ]
         ]);
 
@@ -94,6 +102,15 @@ class InstallController extends SeedController
                 'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
                 'bodyContent' => $this->getBodyContent($faker)
             ],
+            'localized' => [
+                'de' => [
+                    'title' => 'Neues Deutsches Kino',
+                    'slug' => 'neues-deutsches-kino',
+                    'fields' => [
+                        'tagline' => 'Besser wirds nicht.'
+                    ]
+                ]
+            ]
         ]);
 
         $genre = $this->createEntry([
@@ -114,35 +131,115 @@ class InstallController extends SeedController
             'section' => 'country',
             'type' => 'default',
             'title' => 'Germany',
-            'slug' => 'germany'
+            'slug' => 'germany',
+            'localized' => [
+                'de' => [
+                    'title' => 'Deutschland',
+                    'slug' => 'deutschland'
+                ]
+            ]
         ]);
 
         $sponsor = $this->createEntry([
             'section' => 'sponsor',
             'type' => 'default',
             'title' => 'Kreissparkasse Recklinghausen-Süd',
-            'slug' => 'kreissparkasse recklinghausen-sued'
+            'slug' => 'kreissparkasse-recklinghausen-sued',
+            'fields' => [
+                'tagline' => 'Our Solution - Your problem',
+                'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
+                'bodyContent' => $this->getBodyContent($faker)
+            ],
+        ]);
+
+        $competition = $this->createEntry([
+            'section' => 'competition',
+            'type' => 'default',
+            'title' => 'Golden Pineapple',
+            'slug' => 'golden-pineapple',
+            'fields' => [
+                'tagline' => 'The price everybody wants to win',
+                'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
+                'bodyContent' => $this->getBodyContent($faker)
+            ],
+            'localized' => [
+                'de' => [
+                    'title' => 'Goldene Ananas',
+                    'slug' => 'goldene-ananas',
+                    'fields' => [
+                        'tagline' => 'Diesen Preis wollen alle gewinnen.'
+                    ]
+                ]
+            ]
+        ]);
+
+        $topic = $this->createEntry([
+            'section' => 'topic',
+            'type' => 'default',
+            'title' => 'Super Heroes',
+            'slug' => 'super-heroes',
+            'fields' => [
+                'tagline' => 'Everybody can become a super hero',
+                'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
+                'bodyContent' => $this->getBodyContent($faker)
+            ],
+            'localized' => [
+                'de' => [
+                    'title' => 'Superhelden',
+                    'slug' => 'superhelden',
+                    'fields' => [
+                        'tagline' => 'Jeder kann ein Superheld werden.'
+                    ]
+                ]
+            ]
         ]);
 
         $language1 = $this->createEntry([
             'section' => 'language',
             'type' => 'default',
             'title' => 'English',
-            'slug' => 'english'
+            'slug' => 'english',
+            'fields' => [
+                'abbreviation' => 'en',
+            ],
+            'localized' => [
+                'de' => [
+                    'title' => 'Englisch',
+                    'slug' => 'englisch'
+                ]
+            ]
         ]);
 
         $language2 = $this->createEntry([
             'section' => 'language',
             'type' => 'default',
             'title' => 'German',
-            'slug' => 'german'
+            'slug' => 'german',
+            'fields' => [
+                'abbreviation' => 'de',
+            ],
+            'localized' => [
+                'de' => [
+                    'title' => 'Deutsch',
+                    'slug' => 'deutsch'
+                ]
+            ]
         ]);
 
         $language3 = $this->createEntry([
             'section' => 'language',
             'type' => 'default',
             'title' => 'French',
-            'slug' => 'french'
+            'slug' => 'french',
+            'fields' => [
+                'abbreviation' => 'fr',
+            ],
+            'localized' => [
+                'de' => [
+                    'title' => 'Französisch',
+                    'slug' => 'französisch'
+                ]
+            ]
         ]);
 
         $location = $this->createEntry([
@@ -153,8 +250,18 @@ class InstallController extends SeedController
             'fields' => [
                 'tagline' => 'Small but beautiful',
                 'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
+                'postalAddress' => $faker->address(),
+                'phoneNumber' => $faker->phoneNumber(),
+                'email' => $faker->email(),
                 'bodyContent' => $this->getBodyContent($faker)
             ],
+            'localized' => [
+                'de' => [
+                    'fields' => [
+                        'tagline' => 'Klein aber fein'
+                    ]
+                ]
+            ]
         ]);
 
         $film = $this->createEntry([
@@ -173,37 +280,49 @@ class InstallController extends SeedController
                 'camera' => [$person1->id],
                 'director' => [$person2->id],
                 'filmSections' => [$filmSection->id],
+                'competitions' => [$competition->id],
+                'topics' => [$topic->id],
                 'sponsors' => [$sponsor->id],
                 'languages' => [$language1->id],
                 'subtitleLanguages' => [$language2->id, $language3->id],
                 'runtime' => 135,
                 'fsk' => 16,
-                'releaseYear' => 1989,                'originalTitle' => 'The mother of all movies',
-                'bodyContent' => $this->getBodyContent($faker)
+                'releaseYear' => 1989,
+                'originalTitle' => 'The mother of all movies',
+                'bodyContent' => $this->getBodyContent($faker),
             ],
+            'localized' => [
+                'de' => [
+                    'fields' => [
+                        'tagline' => 'So etwas haben Sie noch nie gesehen.'
+                    ]
+                ]
+            ]
         ]);
 
         $screening = $this->createEntry([
             'section' => 'screening',
             'type' => 'default',
-            'title' => 'The Mother of All Movies - Gloria Kleinfinstenich - 2022-12-24 19:45',
-            'slug' => 'the-mother-of-all-movies-gloria-kleinfinstenich-2022-12-24-19-45',
+            'title' => '',
+            'slug' => 'screening1',
             'fields' => [
                 'films' => [$film->id],
                 'locations' => [$location->id],
-                'screeningDateTime' => new DateTime('2022-12-24 19:45')
+                'screeningDate' => new DateTime('2023-04-24'),
+                'screeningTime' => new DateTime('16:00')
             ],
         ]);
 
         $screening2 = $this->createEntry([
             'section' => 'screening',
             'type' => 'default',
-            'title' => 'The Mother of All Movies - Gloria Kleinfinstenich - 2022-12-31 19:45',
-            'slug' => 'the-mother-of-all-movies-gloria-kleinfinstenich-2022-12-31-19-45',
+            'title' => '',
+            'slug' => 'screening2',
             'fields' => [
                 'films' => [$film->id],
                 'locations' => [$location->id],
-                'screeningDateTime' => new DateTime('2022-12-31 19:45')
+                'screeningDate' => new DateTime('2023-04-30'),
+                'screeningTime' => new DateTime('19:45')
             ],
         ]);
 
