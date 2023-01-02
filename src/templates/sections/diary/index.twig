@@ -1,0 +1,6 @@
+{% include '@ff/partials/section-index.twig' with {
+    entry,
+    query: craft.entries
+        .section('diary')
+        .orderBy('diaryDate desc')
+} only %}

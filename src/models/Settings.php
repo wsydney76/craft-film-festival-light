@@ -22,7 +22,10 @@ class Settings extends Model
 
     public bool $enableFilmPoster = true;
     public bool $enableGenres = true;
+
     public bool $enableCountries = true;
     public bool $enableLanguages = true;
     public bool $enableSubtitleLanguages = true;
+
+    public bool $enableDiaries = true;
 }

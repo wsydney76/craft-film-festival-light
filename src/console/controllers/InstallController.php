@@ -61,8 +61,8 @@ class InstallController extends SeedController
                 'birthday' => new DateTime('1986-04-09'),
                 'shortBio' => 'Erna studied in Kleinfinstenich and New York.',
                 'filmography' => 'Tbd.',
-                'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
-                'photo' => [$this->getRandomImage(200)->id],
+                'featuredImage' => $this->getRandomImageIds(),
+                'photo' => $this->getRandomImageIds(width: 200),
                 'bodyContent' => $this->getBodyContent($faker)
             ],
             'localized' => [
@@ -87,8 +87,8 @@ class InstallController extends SeedController
                 'birthday' => new DateTime('1932-11-15'),
                 'shortBio' => 'Dummy',
                 'filmography' => 'Tbd.',
-                'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
-                'photo' => [$this->getRandomImage(200)->id],
+                'featuredImage' => $this->getRandomImageIds(),
+                'photo' => $this->getRandomImageIds(width: 200),
                 'bodyContent' => $this->getBodyContent($faker)
             ],
         ]);
@@ -100,7 +100,7 @@ class InstallController extends SeedController
             'slug' => 'new-german-cinema',
             'fields' => [
                 'tagline' => 'The best you can get',
-                'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
+                'featuredImage' => $this->getRandomImageIds(),
                 'bodyContent' => $this->getBodyContent($faker)
             ],
             'localized' => [
@@ -148,7 +148,7 @@ class InstallController extends SeedController
             'slug' => 'kreissparkasse-recklinghausen-sued',
             'fields' => [
                 'tagline' => 'Our Solution - Your problem',
-                'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
+                'featuredImage' => $this->getRandomImageIds(),
                 'bodyContent' => $this->getBodyContent($faker)
             ],
         ]);
@@ -160,7 +160,8 @@ class InstallController extends SeedController
             'slug' => 'golden-pineapple',
             'fields' => [
                 'tagline' => 'The price everybody wants to win',
-                'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
+                'featuredImage' => $this->getRandomImageIds(),
+                'jury' => [$person1->id, $person2->id],
                 'bodyContent' => $this->getBodyContent($faker)
             ],
             'localized' => [
@@ -181,7 +182,7 @@ class InstallController extends SeedController
             'slug' => 'super-heroes',
             'fields' => [
                 'tagline' => 'Everybody can become a super hero',
-                'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
+                'featuredImage' => $this->getRandomImageIds(),
                 'bodyContent' => $this->getBodyContent($faker)
             ],
             'localized' => [
@@ -250,7 +251,7 @@ class InstallController extends SeedController
             'slug' => 'gloria-kleinfinstenich',
             'fields' => [
                 'tagline' => 'Small but beautiful',
-                'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
+                'featuredImage' => $this->getRandomImageIds(),
                 'postalAddress' => $faker->address(),
                 'phoneNumber' => $faker->phoneNumber(),
                 'email' => $faker->email(),
@@ -272,8 +273,8 @@ class InstallController extends SeedController
             'slug' => 'die-mutter-aller-filme',
             'fields' => [
                 'tagline' => 'You never saw something like this',
-                'featuredImage' => [$this->getRandomImage($this->minWidth)->id],
-                'filmPoster' => [$this->getRandomImage(300)->id],
+                'featuredImage' => $this->getRandomImageIds(),
+                'filmPoster' => $this->getRandomImageIds(width: 300),
                 'genres' => [$genre->id],
                 'countries' => [$country1->id, $country2->id],
                 'cast' => [$person1->id, $person2->id],
@@ -327,43 +328,44 @@ class InstallController extends SeedController
             ],
         ]);
 
+        $this->createEntry([
+            'section' => 'diary',
+            'type' => 'default',
+            'title' => 'Premiere',
+            'slug' => 'premiere',
+            'fields' => [
+                'tagline' => 'The great opening',
+                'featuredImage' => $this->getRandomImageIds(),
+                'diaryDate' => new DateTime('2023-04-30'),
+                'films' => [$film->id],
+                'locations' => [$location->id],
+                'people' => [$person2->id],
+                'bodyContent' => [
+                    [
+                        'type' => 'gallery',
+                        'fields' => [
+                            'images' => $this->getRandomImageIds(6)
+                        ]
+                    ]
+                ]
+            ],
+        ]);
+
+
         return ExitCode::OK;
     }
 
-    public function actionTest(): int
+
+    protected function getRandomImageIds(int $count = 1, ?int $width = null): array
     {
+        $imageIds = [];
+        for ($i = 0; $i < $count; $i++) {
+            $image = $this->getRandomImage($width ?? $this->minWidth);
+            if ($image) {
+                $imageIds[] = $image->id;
+            }
+        }
 
-        $config = Craft::$app->projectConfig->get('elementSources');
-        $section = Craft::$app->sections->getSectionByHandle('film');
-        $field = Craft::$app->fields->getFieldByHandle('cast');
-        Console::output($section->uid);
-
-        $config['craft\\elements\\Entry'][] = [
-            'disabled' => false,
-            'key' => "section:$section->uid",
-            'tableAttributes' => [
-                "field:$field->uid",
-                'slug',
-                'postDate',
-                'link'
-            ],
-            'type' => 'native'
-        ];
-
-        Craft::$app->projectConfig->set('elementSources', $config);
-
-//        foreach ($config as $type => $sources) {
-//            if ($type === 'craft\\elements\\Entry') {
-//                foreach ($sources as  $key => $source) {
-//                    if ($source['type'] === 'native' && $source['key'] === "section:$section->uid") {
-//                        $config[$type][$key]['tableAttributes'] = [
-//                          'slug'
-//                        ];
-//                    }
-//                }
-//            }
-//        }
-
-        return ExitCode::OK;
+        return $imageIds;
     }
 }

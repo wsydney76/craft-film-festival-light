@@ -1,0 +1,7 @@
+{% include '@ff/partials/sidebar-lists.twig' with {
+    lists: [
+        {heading: 'Location'|t('ff'), query: entry.locations, enabled: true},
+        {heading: 'Film'|t('ff'), query: entry.films, enabled: true},
+        {heading: 'People'|t('ff'), query: entry.people, enabled: true}
+    ]
+} only %}

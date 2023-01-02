@@ -1,0 +1,8 @@
+{% include '_layouts/partials/cards.twig' with {
+    heading: 'Jury'|t('ff'),
+    wide: true,
+    query: craft.entries
+        .section('person')
+        .relatedTo({sourceElement: entry, field: 'jury'})
+
+} only %}

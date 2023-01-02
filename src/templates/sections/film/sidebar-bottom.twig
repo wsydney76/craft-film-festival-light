@@ -50,7 +50,9 @@
     lists: [
         {heading: 'Section'|t('ff'), query: entry.filmSections, enabled: settings.enableSections},
         {heading: 'Competition'|t('ff'), query: entry.competitions, enabled: settings.enableCompetitions},
-        {heading: 'Topic'|t('ff'), query: entry.topics, enabled: settings.enableTopics}
+        {heading: 'Topic'|t('ff'), query: entry.topics, enabled: settings.enableTopics},
+        {heading: 'Diaries'|t('ff'), query: craft.entries.section('diary').relatedTo(entry), enabled: settings.enableDiaries},
+        {heading: 'News'|t('ff'), query: craft.entries.section('news').relatedTo(entry), enabled: true},
     ]
 } only %}
 

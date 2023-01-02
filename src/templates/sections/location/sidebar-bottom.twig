@@ -26,3 +26,9 @@
         {% endblock %}
     {% endembed %}
 {% endif %}
+
+{% include '@ff/partials/sidebar-lists.twig' with {
+    lists: [
+        {heading: 'Diaries'|t('ff'), query: craft.entries.section('diary').relatedTo(entry), enabled: settings.enableDiaries},
+    ]
+} only %}

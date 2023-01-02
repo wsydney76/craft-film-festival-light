@@ -8,6 +8,7 @@ use craft\base\Model;
 use craft\elements\Entry;
 use craft\fieldlayoutelements\CustomField;
 use craft\fieldlayoutelements\LineBreak;
+use craft\fieldlayoutelements\Tip;
 use craft\fieldlayoutelements\TitleField;
 use craft\fields\Assets;
 use craft\fields\Date;
@@ -47,7 +48,6 @@ class MigrationService extends Component
     protected $fieldGroup;
     protected $doUpdateFieldlayout = [];
 
-    protected string $elementSourcesHeading = 'Festival';
 
     public function install(): bool
     {
@@ -83,6 +83,8 @@ class MigrationService extends Component
                 ]
             ]
         ]);
+
+
         return true;
     }
 
@@ -177,15 +179,10 @@ class MigrationService extends Component
             $this->createSection([
                 'name' => 'Diary',
                 'plural' => 'Diaries',
-                'template' => 'ff/sections/default/md'
+                'addIndexPage' => true,
+                'template' => 'ff/sections/default/sidebar'
             ]) &&
 
-            $this->createSection([
-                'name' => 'Jury',
-                'plural' => 'Juries',
-                'createEntriesField' => true,
-                'template' => 'ff/sections/default/md'
-            ]) &&
 
             $this->createSection([
                 'name' => 'Sponsor',
@@ -227,7 +224,8 @@ class MigrationService extends Component
             'handle' => 'cast',
             'sources' => [
                 "section:$section->uid"
-            ]
+            ],
+            'searchable' => true
         ]);
 
         $this->createField([
@@ -237,7 +235,8 @@ class MigrationService extends Component
             'handle' => 'script',
             'sources' => [
                 "section:$section->uid"
-            ]
+            ],
+            'searchable' => true
         ]);
 
         $this->createField([
@@ -247,7 +246,8 @@ class MigrationService extends Component
             'handle' => 'camera',
             'sources' => [
                 "section:$section->uid"
-            ]
+            ],
+            'searchable' => true
         ]);
 
         $this->createField([
@@ -257,7 +257,30 @@ class MigrationService extends Component
             'handle' => 'director',
             'sources' => [
                 "section:$section->uid"
-            ]
+            ],
+            'searchable' => true
+        ]);
+
+        $this->createField([
+            'class' => Entries::class,
+            'groupId' => $fieldGroup->id,
+            'name' => 'Jury',
+            'handle' => 'jury',
+            'sources' => [
+                "section:$section->uid"
+            ],
+            'searchable' => true
+        ]);
+
+        $this->createField([
+            'class' => Entries::class,
+            'groupId' => $fieldGroup->id,
+            'name' => 'People',
+            'handle' => 'people',
+            'sources' => [
+                "section:$section->uid"
+            ],
+            'searchable' => true
         ]);
 
         $this->createField([
@@ -265,7 +288,8 @@ class MigrationService extends Component
             'groupId' => $fieldGroup->id,
             'handle' => 'releaseYear',
             'name' => 'Release Year',
-            'previewFormat' => Number::FORMAT_NONE
+            'previewFormat' => Number::FORMAT_NONE,
+            'searchable' => true
         ]);
 
 
@@ -294,6 +318,7 @@ class MigrationService extends Component
             'handle' => 'firstName',
             'name' => 'First Name',
             'charLimit' => 30,
+            'searchable' => true
         ]);
 
         $this->createField([
@@ -302,6 +327,7 @@ class MigrationService extends Component
             'handle' => 'nameAffix',
             'name' => 'Name affix',
             'charLimit' => 30,
+            'searchable' => true
         ]);
 
         $this->createField([
@@ -310,6 +336,7 @@ class MigrationService extends Component
             'handle' => 'lastName',
             'name' => 'Last Name',
             'charLimit' => 30,
+            'searchable' => true
         ]);
 
         $this->createField([
@@ -334,7 +361,8 @@ class MigrationService extends Component
             'class' => PlainText::class,
             'groupId' => $fieldGroup->id,
             'handle' => 'originalTitle',
-            'name' => 'Original title'
+            'name' => 'Original title',
+            'searchable' => true
         ]);
 
         $volume = Craft::$app->volumes->getVolumeByHandle('images');
@@ -370,6 +398,7 @@ class MigrationService extends Component
             'multiline' => true,
             'initialRows' => 2,
             'translationMethod' => Field::TRANSLATION_METHOD_LANGUAGE,
+            'searchable' => true
         ]);
 
         $this->createField([
@@ -380,6 +409,7 @@ class MigrationService extends Component
             'multiline' => true,
             'initialRows' => 2,
             'translationMethod' => Field::TRANSLATION_METHOD_LANGUAGE,
+            'searchable' => true
         ]);
 
         $this->createField([
@@ -387,6 +417,15 @@ class MigrationService extends Component
             'groupId' => $fieldGroup->id,
             'name' => 'Birthday',
             'handle' => 'birthday'
+        ]);
+
+        $this->createField([
+            'class' => Date::class,
+            'groupId' => $fieldGroup->id,
+            'handle' => 'diaryDate',
+            'name' => 'Diary Date',
+            'showDate' => true,
+            'showTime' => false
         ]);
 
         $this->createField([
@@ -454,11 +493,16 @@ class MigrationService extends Component
         ]);
 
         $this->updateFieldLayout('competition', [
-            'heroArea', 'featuredImage', 'tagline', 'bodyContent'
+            'heroArea', 'featuredImage', 'tagline', 'jury', 'bodyContent'
         ]);
 
         $this->updateFieldLayout('diary', [
-            'featuredImage', 'tagline', 'bodyContent'
+            'featuredImage', 'tagline',
+            ['diaryDate', ['required' => true]],
+            ['locations', ['width' => 25]],
+            ['films', ['width' => 25]],
+            ['people', ['width' => 25]],
+            'bodyContent'
         ]);
 
         $this->updateFieldLayout('sponsor', [
@@ -486,7 +530,8 @@ class MigrationService extends Component
     {
         $fields = Craft::$app->fields;
 
-        $defaultSections = ['filmSection', 'competition', 'jury', 'sponsor', 'topic', 'diary', 'country', 'genre', 'language'];
+        $defaultFestivalSections = ['filmSection', 'competition', 'sponsor', 'diary'];
+        $categorySections = ['topic', 'country', 'genre'];
 
         $defaultTableAttributes = [
             'author',
@@ -494,39 +539,44 @@ class MigrationService extends Component
             'link'
         ];
 
-        $this->updateElementSource('film', [
+        $this->updateElementSource('Festival', 'film', [
             "field:{$fields->getFieldByHandle('tagline')->uid}",
             "field:{$fields->getFieldByHandle('filmSections')->uid}",
-            'author',
-            'link'
+            ...$defaultTableAttributes
         ]);
 
-        $this->updateElementSource('person', [
+        $this->updateElementSource('Festival', 'person', [
             "field:{$fields->getFieldByHandle('tagline')->uid}",
             "field:{$fields->getFieldByHandle('photo')->uid}",
-            'author',
-            'link'
+            ...$defaultTableAttributes
         ]);
 
-        $this->updateElementSource('location', [
+        $this->updateElementSource('Festival', 'location', [
             "field:{$fields->getFieldByHandle('tagline')->uid}",
             "field:{$fields->getFieldByHandle('postalAddress')->uid}",
-            'author',
-            'link'
+            ...$defaultTableAttributes
         ]);
 
-        $this->updateElementSource('screening', [
+        $this->updateElementSource('Festival', 'screening', [
             "field:{$fields->getFieldByHandle('films')->uid}",
             "field:{$fields->getFieldByHandle('locations')->uid}",
             "field:{$fields->getFieldByHandle('screeningDate')->uid}",
             "field:{$fields->getFieldByHandle('screeningTime')->uid}",
-            'author',
-            'link'
+            ...$defaultTableAttributes
         ]);
 
-        foreach ($defaultSections as $section) {
-            $this->updateElementSource($section, $defaultTableAttributes);
+        foreach ($defaultFestivalSections as $section) {
+            $this->updateElementSource('Festival', $section, $defaultTableAttributes);
         }
+
+        foreach ($categorySections as $section) {
+            $this->updateElementSource('Categories', $section, $defaultTableAttributes);
+        }
+
+        $this->updateElementSource('Categories', 'language', [
+            "field:{$fields->getFieldByHandle('abbreviation')->uid}",
+            ...$defaultTableAttributes
+        ]);
 
         return true;
 
@@ -704,6 +754,10 @@ class MigrationService extends Component
                         return new LineBreak();
                     }
 
+                    if ($layoutElement[0] === 'tip') {
+                        return new Tip($layoutElement[1]);
+                    }
+
                     return new CustomField(Craft::$app->fields->getFieldByHandle($layoutElement[0]), $layoutElement[1]);
                 })
                 ->toArray()
@@ -726,12 +780,13 @@ class MigrationService extends Component
         return true;
     }
 
-    private function updateElementSource(string $sectionHandle, array $tableAttributes)
+    private function updateElementSource(string $heading, string $sectionHandle, array $tableAttributes)
     {
         $config = Craft::$app->projectConfig->get('elementSources');
         $section = Craft::$app->sections->getSectionByHandle($sectionHandle);
         $key = "section:{$section->uid}";
 
+        // Check for existing source
         foreach ($config['craft\\elements\\Entry'] as $source) {
             if ($source['type'] === 'native' && $source['key'] === $key) {
                return;
@@ -741,20 +796,21 @@ class MigrationService extends Component
         // Ensure a heading is set
         $headingExists = false;
         foreach ($config['craft\\elements\\Entry'] as $source) {
-            if ($source['type'] === 'heading' && $source['heading'] === $this->elementSourcesHeading) {
+            if ($source['type'] === 'heading' && $source['heading'] === $heading) {
                 $headingExists = true;
                 break;
             }
         }
 
+        // Append heading
         if (!$headingExists) {
             $config['craft\\elements\\Entry'][] = [
-                'heading' => $this->elementSourcesHeading,
+                'heading' => $heading,
                 'type' => 'heading'
             ];
         }
 
-
+        // A source for newly created sections does not exist, so we can just append it.
         $config['craft\\elements\\Entry'][] = [
             'disabled' => false,
             'key' => $key,

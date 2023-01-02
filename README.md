@@ -28,3 +28,17 @@ composer require wsydney76/craft-film-festival
 # tell Craft to install the plugin
 ./craft plugin/install ff
 ```
+
+## TODOS
+
+tbd.
+
+```bash
+./craft ff/install
+./craft ff/install/seed
+```
+
+
+* Rearrange pages for nav
+* update config/custom.php for search
+* check settings

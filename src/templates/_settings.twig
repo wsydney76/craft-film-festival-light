@@ -77,6 +77,12 @@
 }) }}
 
 {{ forms.lightswitchField({
+    label: 'Enable Diaries',
+    name: 'enableDiaries',
+    on: settings.enableGenres
+}) }}
+
+{{ forms.lightswitchField({
     label: 'Enable Languages',
     name: 'enableLanguages',
     on: settings.enableLanguages

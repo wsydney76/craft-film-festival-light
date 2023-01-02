@@ -22,6 +22,18 @@
             query: craft.entries.section('film').relatedTo({targetElement: entry, field: 'director'}),
             enabled: true
         },
+        {
+            heading: 'Jury'|t('ff'),
+            query: craft.entries.section('competition').relatedTo({targetElement: entry, field: 'jury'}),
+            enabled: true
+        },
+    ]
+} only %}
+
+{% include '@ff/partials/sidebar-lists.twig' with {
+    lists: [
+        {heading: 'Diaries'|t('ff'), query: craft.entries.section('diary').relatedTo(entry), enabled: settings.enableDiaries},
+        {heading: 'News'|t('ff'), query: craft.entries.section('news').relatedTo(entry), enabled: true},
     ]
 } only %}
 
@@ -31,5 +43,4 @@
             {{ entry.filmography|nl2br }}
         {% endblock %}
     {% endembed %}
-
 {% endif %}
