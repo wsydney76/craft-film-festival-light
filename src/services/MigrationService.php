@@ -115,7 +115,7 @@ class MigrationService extends Component
                 'plural' => 'Films',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
-                'template' => 'ff/sections/default/sidebar'
+                'template' => 'ff/layouts/sidebar'
             ]) &&
 
             $this->createSection([
@@ -123,7 +123,7 @@ class MigrationService extends Component
                 'plural' => 'People',
                 'titleFormat' => '{firstName} {nameAffix} {lastName}',
                 'addIndexPage' => true,
-                'template' => 'ff/sections/default/sidebar'
+                'template' => 'ff/layouts/sidebar'
             ]) &&
 
             $this->createSection([
@@ -134,7 +134,7 @@ class MigrationService extends Component
                 'addIndexPage' => true,
                 'createEntriesField' => true,
                 'entriesFieldHandle' => 'filmSections',
-                'template' => 'ff/sections/default/md'
+                'template' => 'ff/layouts/md'
             ]) &&
 
             $this->createSection([
@@ -142,7 +142,7 @@ class MigrationService extends Component
                 'plural' => 'Locations',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
-                'template' => 'ff/sections/default/sidebar'
+                'template' => 'ff/layouts/sidebar'
             ]) &&
 
             $this->createSection([
@@ -150,7 +150,7 @@ class MigrationService extends Component
                 'plural' => 'Languages',
                 'addIndexPage' => false,
                 'createEntriesField' => true,
-                'template' => 'ff/sections/default/md'
+                'template' => 'ff/layouts/md'
             ]) &&
 
             $this->createSection([
@@ -159,28 +159,28 @@ class MigrationService extends Component
                 'plural' => 'Competitions',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
-                'template' => 'ff/sections/default/md'
+                'template' => 'ff/layouts/md'
             ]) &&
 
             $this->createSection([
                 'name' => 'Country',
                 'plural' => 'Countries',
                 'createEntriesField' => true,
-                'template' => 'ff/sections/default/md'
+                'template' => 'ff/layouts/md'
             ]) &&
 
             $this->createSection([
                 'name' => 'Genre',
                 'plural' => 'Genres',
                 'createEntriesField' => true,
-                'template' => 'ff/sections/default/md'
+                'template' => 'ff/layouts/md'
             ]) &&
 
             $this->createSection([
                 'name' => 'Diary',
                 'plural' => 'Diaries',
                 'addIndexPage' => true,
-                'template' => 'ff/sections/default/sidebar'
+                'template' => 'ff/layouts/sidebar'
             ]) &&
 
 
@@ -188,7 +188,7 @@ class MigrationService extends Component
                 'name' => 'Sponsor',
                 'plural' => 'Sponsors',
                 'createEntriesField' => true,
-                'template' => 'ff/sections/default/md'
+                'template' => 'ff/layouts/md'
             ]) &&
 
             $this->createSection([
@@ -197,14 +197,14 @@ class MigrationService extends Component
                 'plural' => 'Topics',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
-                'template' => 'ff/sections/default/md'
+                'template' => 'ff/layouts/md'
             ]) &&
 
             $this->createSection([
                 'name' => 'Screening',
                 'plural' => 'screenings',
                 'titleFormat' => '{films.one.title} - {locations.one.title} - {screeningDate|date(\'Y-m-d\')}:{screeningTime|time(\'H:i\')}',
-                'template' => 'ff/sections/default/md'
+                'template' => 'ff/layouts/md'
             ])
         );
     }
