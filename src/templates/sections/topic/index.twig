@@ -1,6 +1,5 @@
 {% include '@ff/partials/section-index.twig' with {
     entry,
     query: craft.entries
-        .section('person')
-        .orderBy('lastName, firstName')
+        .section('topic')
 } only %}

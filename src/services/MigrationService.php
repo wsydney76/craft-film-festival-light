@@ -47,6 +47,8 @@ class MigrationService extends Component
     protected $fieldGroup;
     protected $doUpdateFieldlayout = [];
 
+    protected string $elementSourcesHeading = 'Festival';
+
     public function install(): bool
     {
         // Craft::$app->runAction('gc', ['interactive' => false]);
@@ -55,7 +57,8 @@ class MigrationService extends Component
         $this->createFieldGroup() &&
         $this->createSections() &&
         $this->createFields() &&
-        $this->updateFieldLayouts();
+        $this->updateFieldLayouts() &&
+        $this->updateElementSources();
 
         return true;
     }
@@ -116,7 +119,7 @@ class MigrationService extends Component
             $this->createSection([
                 'name' => 'Person',
                 'plural' => 'People',
-                'titleFormat' => '{firstName} {lastName}',
+                'titleFormat' => '{firstName} {nameAffix} {lastName}',
                 'addIndexPage' => true,
                 'template' => 'ff/sections/default/sidebar'
             ]) &&
@@ -289,14 +292,24 @@ class MigrationService extends Component
             'class' => PlainText::class,
             'groupId' => $fieldGroup->id,
             'handle' => 'firstName',
-            'name' => 'First Name'
+            'name' => 'First Name',
+            'charLimit' => 30,
+        ]);
+
+        $this->createField([
+            'class' => PlainText::class,
+            'groupId' => $fieldGroup->id,
+            'handle' => 'nameAffix',
+            'name' => 'Name affix',
+            'charLimit' => 30,
         ]);
 
         $this->createField([
             'class' => PlainText::class,
             'groupId' => $fieldGroup->id,
             'handle' => 'lastName',
-            'name' => 'Last Name'
+            'name' => 'Last Name',
+            'charLimit' => 30,
         ]);
 
         $this->createField([
@@ -423,6 +436,7 @@ class MigrationService extends Component
 
         $this->updateFieldLayout('person', [
             ['firstName', ['required' => true, 'width' => 25]],
+            ['nameAffix', ['width' => 25]],
             ['lastName', ['required' => true, 'width' => 25]],
             'featuredImage', 'tagline',
             'photo', 'birthday', 'shortBio', 'filmography',
@@ -464,6 +478,58 @@ class MigrationService extends Component
             ['screeningDate', ['width' => 25, 'required' => true]],
             ['screeningTime', ['width' => 25, 'required' => true]],
         ]);
+
+        return true;
+    }
+
+    private function updateElementSources(): bool
+    {
+        $fields = Craft::$app->fields;
+
+        $defaultSections = ['filmSection', 'competition', 'jury', 'sponsor', 'topic', 'diary', 'country', 'genre', 'language'];
+
+        $defaultTableAttributes = [
+            'author',
+            'dateCreated',
+            'link'
+        ];
+
+        $this->updateElementSource('film', [
+            "field:{$fields->getFieldByHandle('tagline')->uid}",
+            "field:{$fields->getFieldByHandle('filmSections')->uid}",
+            'author',
+            'link'
+        ]);
+
+        $this->updateElementSource('person', [
+            "field:{$fields->getFieldByHandle('tagline')->uid}",
+            "field:{$fields->getFieldByHandle('photo')->uid}",
+            'author',
+            'link'
+        ]);
+
+        $this->updateElementSource('location', [
+            "field:{$fields->getFieldByHandle('tagline')->uid}",
+            "field:{$fields->getFieldByHandle('postalAddress')->uid}",
+            'author',
+            'link'
+        ]);
+
+        $this->updateElementSource('screening', [
+            "field:{$fields->getFieldByHandle('films')->uid}",
+            "field:{$fields->getFieldByHandle('locations')->uid}",
+            "field:{$fields->getFieldByHandle('screeningDate')->uid}",
+            "field:{$fields->getFieldByHandle('screeningTime')->uid}",
+            'author',
+            'link'
+        ]);
+
+        foreach ($defaultSections as $section) {
+            $this->updateElementSource($section, $defaultTableAttributes);
+        }
+
+        return true;
+
     }
 
     private function createSection(array $config): bool
@@ -526,18 +592,17 @@ class MigrationService extends Component
 
             MainModule::getInstance()->content->createEntry([
                 'section' => 'page',
-                'type' => 'sectionIndex',
+                'type' => 'pageTemplate',
                 'title' => $plural,
                 'slug' => $baseUri,
                 'parent' => $homePage,
                 'fields' => [
-                    'sections' => $handle,
-                    'cardContentTemplateRoot' => '@ff/sections'
+                    'pageTemplate' => "@ff/sections/$section->handle/index"
                 ],
                 'localized' => [
                     'de' => [
-                        'title' => Craft::t('ff', $plural),
-                        'slug' => Craft::t('ff', $baseUri),
+                        'title' => Craft::t('ff', $plural, language: 'de_DE'),
+                        'slug' => Craft::t('ff', $baseUri, language: 'de_DE'),
                     ]
                 ]
             ]);
@@ -660,6 +725,48 @@ class MigrationService extends Component
 
         return true;
     }
+
+    private function updateElementSource(string $sectionHandle, array $tableAttributes)
+    {
+        $config = Craft::$app->projectConfig->get('elementSources');
+        $section = Craft::$app->sections->getSectionByHandle($sectionHandle);
+        $key = "section:{$section->uid}";
+
+        foreach ($config['craft\\elements\\Entry'] as $source) {
+            if ($source['type'] === 'native' && $source['key'] === $key) {
+               return;
+            }
+        }
+
+        // Ensure a heading is set
+        $headingExists = false;
+        foreach ($config['craft\\elements\\Entry'] as $source) {
+            if ($source['type'] === 'heading' && $source['heading'] === $this->elementSourcesHeading) {
+                $headingExists = true;
+                break;
+            }
+        }
+
+        if (!$headingExists) {
+            $config['craft\\elements\\Entry'][] = [
+                'heading' => $this->elementSourcesHeading,
+                'type' => 'heading'
+            ];
+        }
+
+
+        $config['craft\\elements\\Entry'][] = [
+            'disabled' => false,
+            'key' => $key,
+            'tableAttributes' => $tableAttributes,
+            'type' => 'native'
+        ];
+
+        Craft::$app->projectConfig->set('elementSources', $config);
+        $this->message("ElementSource for $sectionHandle updated.");
+    }
+
+
 
     private function getFieldGroup(string $fieldGroup)
     {

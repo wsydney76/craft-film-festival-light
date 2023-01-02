@@ -51,10 +51,11 @@ class InstallController extends SeedController
         $person1 = $this->createEntry([
             'section' => 'person',
             'type' => 'default',
-            'title' => 'Erna Klawuppke',
-            'slug' => 'erna-klawuppke',
+            'title' => 'Erna von Klawuppke',
+            'slug' => 'erna-von-klawuppke',
             'fields' => [
                 'firstName' => 'Erna',
+                'nameAffix' => 'von',
                 'lastName' => 'Klawuppke',
                 'tagline' => 'Shooting Star',
                 'birthday' => new DateTime('1986-04-09'),
