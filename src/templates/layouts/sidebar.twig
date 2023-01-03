@@ -34,7 +34,7 @@
 
         {% block sidebar %}
             {% include '_widgets/entries-list.twig' with {
-                heading: 'New'|t('ff'),
+                heading: 'New'|t('ff-light'),
                 query: craft.entries.section('news,diary').limit(3)
             } only %}
         {% endblock %}

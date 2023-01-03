@@ -2,7 +2,7 @@
 {% set entries = query.collect %}
 
 {% if entries.count() %}
-    {% embed "_layouts/embeds/widget.twig"  with {heading: 'Sponsor'|t('ff')} %}
+    {% embed "_layouts/embeds/widget.twig"  with {heading: 'Sponsor'|t('ff-light')} %}
     	{% block content %}
             {% from '_layouts/macros/lib.twig' import img %}
             <div class="space-y-4">

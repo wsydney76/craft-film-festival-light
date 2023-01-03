@@ -1,4 +1,4 @@
-{% set settings = settings ?? craft.app.plugins.plugin('ff').settings %}
+{% set settings = settings ?? craft.app.plugins.plugin('ff-light').settings %}
 
 {% set query = entry.screenings %}
 
@@ -14,7 +14,7 @@
 
 {% if entries.count() %}
     {% include '_layouts/partials/headline.twig' with {
-        text: 'Screenings'|t('ff')
+        text: 'Screenings'|t('ff-light')
     } only %}
 
     <div class="flex flex-wrap">

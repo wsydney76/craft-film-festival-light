@@ -51,13 +51,13 @@
 
         {% if entry.runtime %}
             <div>
-                {{ "Runtime"|t('ff') }} {{ entry.runtime}} {{ "minutes"|t('ff') }}
+                {{ "Runtime"|t('ff-light') }} {{ entry.runtime}} {{ "minutes"|t('ff-light') }}
             </div>
         {% endif %}
         
         {% if entry.fsk %}
             <div>
-                {{ "Approved for"|t('ff') }} {{ entry.fsk }} {{ "years"|t('ff') }}
+                {{ "Approved for"|t('ff-light') }} {{ entry.fsk }} {{ "years"|t('ff-light') }}
             </div>
         {% endif %}
 
@@ -65,7 +65,7 @@
             {% set languages = entry.languages.collect %}
             {% if languages.count() %}
                 <div>
-                    {{ "Language"|t('ff') }}:
+                    {{ "Language"|t('ff-light') }}:
                     {% for language in languages %}
                         {{ language.link }}{{ not loop.last ? ', ' -}}
                     {% endfor -%}
@@ -73,7 +73,7 @@
                     {% if settings.enableSubtitleLanguages %}
                         {% set subtitleLanguages = entry.subtitleLanguages.collect %}
                         {%- if subtitleLanguages.count() -%}
-                            , {{ 'subtitles in'|t('ff') }}
+                            , {{ 'subtitles in'|t('ff-light') }}
                             {% for subtitleLanguage in subtitleLanguages %}
                                 {{ subtitleLanguage.link }}{{ not loop.last ? ', ' }}
                             {% endfor %}

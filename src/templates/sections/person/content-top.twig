@@ -13,8 +13,8 @@
         
         {% if entry.birthday %}
             <div>
-                {{ "Born"|t('ff') }} {{ entry.birthday|date('short') }}
-                ({{ "Age"|t('ff') }} {{ now.diff(entry.birthday).y }})
+                {{ "Born"|t('ff-light') }} {{ entry.birthday|date('short') }}
+                ({{ "Age"|t('ff-light') }} {{ now.diff(entry.birthday).y }})
             </div>
         {% endif %}
         

@@ -1,29 +1,29 @@
-{% set settings = craft.app.plugins.plugin('ff').settings %}
+{% set settings = craft.app.plugins.plugin('ff-light').settings %}
 
 {% include '@ff/partials/sidebar-lists.twig' with {
     lists: [
         {
-            heading: 'Cast'|t('ff'),
+            heading: 'Cast'|t('ff-light'),
             query: craft.entries.section('film').relatedTo({targetElement: entry, field: 'cast'}),
             enabled: true
         },
         {
-            heading: 'Script'|t('ff'),
+            heading: 'Script'|t('ff-light'),
             query: craft.entries.section('film').relatedTo({targetElement: entry, field: 'script'}),
             enabled: settings.enableScript
         },
         {
-            heading: 'Camera'|t('ff'),
+            heading: 'Camera'|t('ff-light'),
             query: craft.entries.section('film').relatedTo({targetElement: entry, field: 'camera'}),
             enabled: settings.enableCamera
         },
         {
-            heading: 'Director'|t('ff'),
+            heading: 'Director'|t('ff-light'),
             query: craft.entries.section('film').relatedTo({targetElement: entry, field: 'director'}),
             enabled: true
         },
         {
-            heading: 'Jury'|t('ff'),
+            heading: 'Jury'|t('ff-light'),
             query: craft.entries.section('competition').relatedTo({targetElement: entry, field: 'jury'}),
             enabled: true
         },
@@ -32,13 +32,13 @@
 
 {% include '@ff/partials/sidebar-lists.twig' with {
     lists: [
-        {heading: 'Diaries'|t('ff'), query: craft.entries.section('diary').relatedTo(entry), enabled: settings.enableDiaries},
-        {heading: 'News'|t('ff'), query: craft.entries.section('news').relatedTo(entry), enabled: true},
+        {heading: 'Diaries'|t('ff-light'), query: craft.entries.section('diary').relatedTo(entry), enabled: settings.enableDiaries},
+        {heading: 'News'|t('ff-light'), query: craft.entries.section('news').relatedTo(entry), enabled: true},
     ]
 } only %}
 
 {% if entry.filmography %}
-    {% embed "_layouts/embeds/widget.twig" with {heading: 'Filmography'|t('ff')} %}
+    {% embed "_layouts/embeds/widget.twig" with {heading: 'Filmography'|t('ff-light')} %}
         {% block content %}
             {{ entry.filmography|nl2br }}
         {% endblock %}

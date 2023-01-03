@@ -1,5 +1,5 @@
 {% include '_layouts/partials/cards.twig' with {
-    heading: 'Credited With'|t('ff'),
+    heading: 'Credited With'|t('ff-light'),
     query: craft.entries
         .section('person')
         .id("not #{entry.id}")

@@ -617,7 +617,7 @@ class MigrationService extends Component
                         'siteId' => $site->id,
                         'enabledByDefault' => true,
                         'hasUrls' => true,
-                        'uriFormat' => Craft::t('ff', $baseUri, language: $site->language) . '/{slug}',
+                        'uriFormat' => Craft::t('ff-light', $baseUri, language: $site->language) . '/{slug}',
                         'template' => $template
                     ]))
                     ->toArray()
@@ -660,8 +660,8 @@ class MigrationService extends Component
                 ],
                 'localized' => [
                     'de' => [
-                        'title' => Craft::t('ff', $plural, language: 'de_DE'),
-                        'slug' => Craft::t('ff', $baseUri, language: 'de_DE'),
+                        'title' => Craft::t('ff-light', $plural, language: 'de_DE'),
+                        'slug' => Craft::t('ff-light', $baseUri, language: 'de_DE'),
                     ]
                 ]
             ]);

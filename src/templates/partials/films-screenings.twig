@@ -1,7 +1,7 @@
-{% set settings = settings ?? craft.app.plugins.plugin('ff').settings %}
+{% set settings = settings ?? craft.app.plugins.plugin('ff-light').settings %}
 
 {% include '_layouts/partials/cards.twig' with {
-    heading: 'Films'|t('ff'),
+    heading: 'Films'|t('ff-light'),
     wide: false,
     query: craft.entries
         .section('film')
