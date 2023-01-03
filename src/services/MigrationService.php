@@ -107,6 +107,33 @@ class MigrationService extends Component
         return (
 
             $this->createSection([
+                'name' => 'Diary',
+                'plural' => 'Diaries',
+                'addIndexPage' => true,
+                'template' => 'ff/layouts/sidebar'
+            ]) &&
+
+            $this->createSection([
+                'type' => Section::TYPE_STRUCTURE,
+                'name' => 'Competition',
+                'plural' => 'Competitions',
+                'addIndexPage' => true,
+                'createEntriesField' => true,
+                'template' => 'ff/layouts/md'
+            ]) &&
+
+            $this->createSection([
+                'type' => Section::TYPE_STRUCTURE,
+                'name' => 'Section',
+                'plural' => 'Sections',
+                'handle' => 'filmSection',
+                'addIndexPage' => true,
+                'createEntriesField' => true,
+                'entriesFieldHandle' => 'filmSections',
+                'template' => 'ff/layouts/md'
+            ]) &&
+
+            $this->createSection([
                 'name' => 'Film',
                 'plural' => 'Films',
                 'addIndexPage' => true,
@@ -120,17 +147,6 @@ class MigrationService extends Component
                 'titleFormat' => '{firstName} {nameAffix} {lastName}',
                 'addIndexPage' => true,
                 'template' => 'ff/layouts/sidebar'
-            ]) &&
-
-            $this->createSection([
-                'type' => Section::TYPE_STRUCTURE,
-                'name' => 'Section',
-                'plural' => 'Sections',
-                'handle' => 'filmSection',
-                'addIndexPage' => true,
-                'createEntriesField' => true,
-                'entriesFieldHandle' => 'filmSections',
-                'template' => 'ff/layouts/md'
             ]) &&
 
             $this->createSection([
@@ -150,15 +166,6 @@ class MigrationService extends Component
             ]) &&
 
             $this->createSection([
-                'type' => Section::TYPE_STRUCTURE,
-                'name' => 'Competition',
-                'plural' => 'Competitions',
-                'addIndexPage' => true,
-                'createEntriesField' => true,
-                'template' => 'ff/layouts/md'
-            ]) &&
-
-            $this->createSection([
                 'name' => 'Country',
                 'plural' => 'Countries',
                 'createEntriesField' => true,
@@ -170,13 +177,6 @@ class MigrationService extends Component
                 'plural' => 'Genres',
                 'createEntriesField' => true,
                 'template' => 'ff/layouts/md'
-            ]) &&
-
-            $this->createSection([
-                'name' => 'Diary',
-                'plural' => 'Diaries',
-                'addIndexPage' => true,
-                'template' => 'ff/layouts/sidebar'
             ]) &&
 
 

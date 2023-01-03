@@ -1,0 +1,19 @@
+{% from '_layouts/macros/lib.twig' import pageButton %}
+
+<div class="">
+    {% set diaryIndexEntry = craft.entries.section('page').type('pageTemplate').pageTemplate('@ff/sections/diary/index').one %}
+
+    {# @var news \craft\elements\ElementCollection #}
+    {% set news = craft.entries.section('news').limit(7).collect %}
+
+    {% if diaryIndexEntry %}
+        {% set news = news.prepend(diaryIndexEntry) %}
+    {% endif %}
+
+    {% include '_layouts/partials/cards.twig' with {
+        entries: news,
+        paginate: true
+    } only %}
+
+    {{ pageButton('newsIndex', 'See all News') }}
+</div>
