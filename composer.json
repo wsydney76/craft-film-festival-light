@@ -1,13 +1,13 @@
 {
-    "name": "wsydney76/craft-film-festival",
+    "name": "wsydney76/craft-film-festival-light",
     "description": "Adds film festival functionality to Craft starter",
     "type": "craft-plugin",
     "license": "mit",
     "support": {
-        "issues": "https://github.com/wsydney@web.de/issues?state=open",
-        "source": "https://github.com/wsydney@web.de",
-        "docs": "https://github.com/wsydney@web.de",
-        "rss": "https://github.com/wsydney@web.de/releases.atom"
+        "issues": "https://github.com/wsydney76/craft-film-festival-light/issues?state=open",
+        "source": "https://github.com/wsydney76/craft-film-festival-light",
+        "docs": "https://github.com/wsydney76/craft-film-festival-light",
+        "rss": "https://github.com/wsydney76/craft-film-festival-light/releases.atom"
     },
     "require": {
         "php": ">=8.0.2",
@@ -23,10 +23,10 @@
         }
     },
     "extra": {
-        "handle": "ff",
-        "name": "Film Festival",
+        "handle": "ff-light",
+        "name": "Film Festival Light",
         "developer": "wsydney76",
-        "documentationUrl": "https://github.com/wsydney@web.de"
+        "documentationUrl": "https://github.com/wsydney76"
     },
     "config": {
         "sort-packages": true,

@@ -55,7 +55,7 @@ class Plugin extends BasePlugin
 
     protected function settingsHtml(): ?string
     {
-        return Craft::$app->view->renderTemplate('ff/_settings.twig', [
+        return Craft::$app->view->renderTemplate('ff-light/_settings.twig', [
             'plugin' => $this,
             'settings' => $this->getSettings(),
         ]);

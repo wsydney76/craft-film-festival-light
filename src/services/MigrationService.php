@@ -18,22 +18,18 @@ use craft\fields\PlainText;
 use craft\fields\Time;
 use craft\helpers\Console;
 use craft\models\FieldGroup;
-use craft\models\FieldLayout;
 use craft\models\FieldLayoutTab;
 use craft\models\Section;
 use craft\models\Section_SiteSettings;
 use craft\models\Site;
 use craft\records\FieldGroup as FieldGroupRecord;
-use DateTime;
 use modules\main\MainModule;
 use yii\base\Component;
-use function array_merge;
 use function collect;
 use function extract;
 use function in_array;
 use function is_string;
 use function strtolower;
-use function var_dump;
 use const EXTR_OVERWRITE;
 
 /**
@@ -225,6 +221,7 @@ class MigrationService extends Component
             'sources' => [
                 "section:$section->uid"
             ],
+            'selectionLabel' => 'Add a person',
             'searchable' => true
         ]);
 
@@ -236,6 +233,7 @@ class MigrationService extends Component
             'sources' => [
                 "section:$section->uid"
             ],
+            'selectionLabel' => 'Add a person',
             'searchable' => true
         ]);
 
@@ -247,6 +245,7 @@ class MigrationService extends Component
             'sources' => [
                 "section:$section->uid"
             ],
+            'selectionLabel' => 'Add a person',
             'searchable' => true
         ]);
 
@@ -258,6 +257,7 @@ class MigrationService extends Component
             'sources' => [
                 "section:$section->uid"
             ],
+            'selectionLabel' => 'Add a person',
             'searchable' => true
         ]);
 
@@ -269,6 +269,7 @@ class MigrationService extends Component
             'sources' => [
                 "section:$section->uid"
             ],
+            'selectionLabel' => 'Add a person',
             'searchable' => true
         ]);
 
@@ -280,6 +281,7 @@ class MigrationService extends Component
             'sources' => [
                 "section:$section->uid"
             ],
+            'selectionLabel' => 'Add a person',
             'searchable' => true
         ]);
 
@@ -301,7 +303,8 @@ class MigrationService extends Component
             'handle' => 'subtitleLanguages',
             'sources' => [
                 "section:$languageSection->uid"
-            ]
+            ],
+            'selectionLabel' => 'Add language'
         ]);
 
         $this->createField([
@@ -372,6 +375,9 @@ class MigrationService extends Component
             'handle' => 'photo',
             'name' => 'Photo',
             'defaultUploadLocationSource' => "volume:$volume->uid",
+            'defaultUploadLocationSubpath' => "photos",
+            'maxRelations' => 1,
+            'selectionLabel' => 'Select image',
             'viewMode' => 'large',
             'sources' => [
                 "volume:$volume->uid"
@@ -384,6 +390,9 @@ class MigrationService extends Component
             'handle' => 'filmPoster',
             'name' => 'Film Poster',
             'defaultUploadLocationSource' => "volume:$volume->uid",
+            'defaultUploadLocationSubpath' => "posters",
+            'maxRelations' => 1,
+            'selectionLabel' => 'Select image',
             'viewMode' => 'large',
             'sources' => [
                 "volume:$volume->uid"
@@ -442,7 +451,7 @@ class MigrationService extends Component
             'groupId' => $fieldGroup->id,
             'handle' => 'screeningTime',
             'name' => 'Screening Time',
-            'minuteIncrement' => 15
+            'minuteIncrement' => 30
         ]);
 
         return true;

@@ -63,7 +63,7 @@ class InstallController extends SeedController
                 'filmography' => 'Tbd.',
                 'featuredImage' => $this->getRandomImageIds(),
                 'photo' => $this->getRandomImageIds(width: 200),
-                'bodyContent' => $this->getBodyContent($faker)
+                'bodyContent' => $this->getTextBlock($faker)
             ],
             'localized' => [
                 'de' => [
@@ -89,7 +89,7 @@ class InstallController extends SeedController
                 'filmography' => 'Tbd.',
                 'featuredImage' => $this->getRandomImageIds(),
                 'photo' => $this->getRandomImageIds(width: 200),
-                'bodyContent' => $this->getBodyContent($faker)
+                'bodyContent' => $this->getTextBlock($faker)
             ],
         ]);
 
@@ -101,7 +101,7 @@ class InstallController extends SeedController
             'fields' => [
                 'tagline' => 'The best you can get',
                 'featuredImage' => $this->getRandomImageIds(),
-                'bodyContent' => $this->getBodyContent($faker)
+                'bodyContent' => $this->getTextBlock($faker)
             ],
             'localized' => [
                 'de' => [
@@ -149,7 +149,7 @@ class InstallController extends SeedController
             'fields' => [
                 'tagline' => 'Our Solution - Your problem',
                 'featuredImage' => $this->getRandomImageIds(),
-                'bodyContent' => $this->getBodyContent($faker)
+                'bodyContent' => $this->getTextBlock($faker)
             ],
         ]);
 
@@ -162,7 +162,7 @@ class InstallController extends SeedController
                 'tagline' => 'The price everybody wants to win',
                 'featuredImage' => $this->getRandomImageIds(),
                 'jury' => [$person1->id, $person2->id],
-                'bodyContent' => $this->getBodyContent($faker)
+                'bodyContent' => $this->getTextBlock($faker)
             ],
             'localized' => [
                 'de' => [
@@ -183,7 +183,7 @@ class InstallController extends SeedController
             'fields' => [
                 'tagline' => 'Everybody can become a super hero',
                 'featuredImage' => $this->getRandomImageIds(),
-                'bodyContent' => $this->getBodyContent($faker)
+                'bodyContent' => $this->getTextBlock($faker)
             ],
             'localized' => [
                 'de' => [
@@ -255,7 +255,7 @@ class InstallController extends SeedController
                 'postalAddress' => $faker->address(),
                 'phoneNumber' => $faker->phoneNumber(),
                 'email' => $faker->email(),
-                'bodyContent' => $this->getBodyContent($faker)
+                'bodyContent' => $this->getTextBlock($faker)
             ],
             'localized' => [
                 'de' => [
@@ -291,7 +291,7 @@ class InstallController extends SeedController
                 'fsk' => 16,
                 'releaseYear' => 1989,
                 'originalTitle' => 'The mother of all movies',
-                'bodyContent' => $this->getBodyContent($faker),
+                'bodyContent' => $this->getTextBlock($faker),
             ],
             'localized' => [
                 'de' => [
@@ -367,5 +367,22 @@ class InstallController extends SeedController
         }
 
         return $imageIds;
+    }
+
+    private function getTextBlock(\Faker\Generator $faker)
+    {
+        $paragraphs = '';
+        foreach ($faker->paragraphs($faker->numberBetween(1, 3)) as $paragraph) {
+            $paragraphs .= $paragraph . PHP_EOL . PHP_EOL;
+        }
+
+        return [
+            [
+                'type' => 'text',
+                'fields' => [
+                    'text' => $paragraphs
+                ]
+            ]
+        ];
     }
 }
