@@ -1,17 +1,18 @@
+{# @var featuredEntries \craft\elements\ElementCollection #}
+{# @var news \craft\elements\ElementCollection #}
+
 {% from '_layouts/macros/lib.twig' import pageButton %}
 
 <div class="">
-    {% set diaryIndexEntry = craft.entries.section('page').type('pageTemplate').pageTemplate('@ff/sections/diary/index').one %}
+    {% set featuredEntries = entry.featuredEntries.collect %}
 
-    {# @var news \craft\elements\ElementCollection #}
-    {% set news = craft.entries.section('news').limit(7).collect %}
 
-    {% if diaryIndexEntry %}
-        {% set news = news.prepend(diaryIndexEntry) %}
-    {% endif %}
+    {% set news = craft.entries.section('news').limit(8 - featuredEntries.count).collect %}
+
+   {% set entries = featuredEntries.merge(news) %}
 
     {% include '_layouts/partials/cards.twig' with {
-        entries: news,
+        entries,
         paginate: true
     } only %}
 

@@ -35,7 +35,7 @@
             <select data-sprig name="screeningDate">
                 <option value="" {{ screeningDate == '' ? 'selected' }}>{{ 'All days'|t('ff-light') }}</option>
                 {% for date in dates %}
-                    <option value="{{ date }}" {{ date == screeningDate ? 'selected' }} >{{ date }}</option>
+                    <option value="{{ date }}" {{ date == screeningDate ? 'selected' }} >{{ date|date('short') }}</option>
                 {% endfor %}
             </select>
         </div>

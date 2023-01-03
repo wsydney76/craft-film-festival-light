@@ -1,5 +1,7 @@
-<div class="mt-4">
-    {% if entry.diaryDate %}
-        {{ entry.diaryDate|date('short') }}
-    {% endif %}
-</div>
+{% embed '_layouts/embeds/card-text.twig' %}
+    {% block content %}
+        {% if entry.diaryDate %}
+            {{ entry.diaryDate|date('short') }}
+        {% endif %}
+    {% endblock %}
+{% endembed %}

@@ -41,4 +41,5 @@ tbd.
 
 * Rearrange pages for nav
 * update config/custom.php for search
+* update config/custom.php for card content templates
 * check settings
