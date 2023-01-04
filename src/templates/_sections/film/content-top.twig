@@ -70,7 +70,7 @@
                         {{ language.link }}{{ not loop.last ? ', ' -}}
                     {% endfor -%}
                     
-                    {% if settings.enableSubtitleLanguages %}
+                    {% if settings.enableSubtitleLanguages -%}
                         {% set subtitleLanguages = entry.subtitleLanguages.collect %}
                         {%- if subtitleLanguages.count() -%}
                             , {{ 'subtitles in'|t('ff-light') }}
