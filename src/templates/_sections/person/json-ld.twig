@@ -1,0 +1,17 @@
+{% set image = entry.photo.one ?? entry.featuredImage.one ?? siteInfo.featuredImage.one %}
+{% set schema = craft.schema %}
+
+{{ schema.person
+    .image(image ? image.url(craft.app.config.custom.defaultTransform))
+    .author(schema.person.name(entry.author.name))
+    .description(entry.tagline ?? entry.title)
+    .url(entry.url)
+    .name(entry.title)
+    .givenName(entry.firstName)
+    .familyName(entry.lastName)
+    .datePublished(entry.postDate)
+    .publisher(organization)
+    .copyrightYear(entry.postDate|date('Y'))
+
+|raw
+}}

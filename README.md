@@ -1,10 +1,13 @@
 # Film Festival
 
-Adds film festival functionality to Craft starter
+Adds film festival functionality to Craft Starter.
 
 ## Requirements
 
 This plugin requires Craft CMS 4.3.5 or later, and PHP 8.0.2 or later.
+
+Latest version of [Craft 4 Starter](https://github.com/wsydney76/craft4-ddev-starter) must be installed.
+ 
 
 ## Installation
 
@@ -41,5 +44,5 @@ tbd.
 
 * Rearrange pages for nav
 * update config/custom.php for search
-* update config/custom.php for card content templates
+* update config/custom.php for section specific template roots
 * check settings

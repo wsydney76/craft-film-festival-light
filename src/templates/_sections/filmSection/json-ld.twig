@@ -1,0 +1,23 @@
+{% set image = entry.featuredImage.one ?? siteInfo.featuredImage.one %}
+{% set schema = craft.schema %}
+
+{% set screenings = entry.screenings.all %}
+
+{{ schema.eventSeries
+    .image(image ? image.url(craft.app.config.custom.defaultTransform))
+    .author(schema.person.name(entry.author.name))
+    .description(entry.tagline ?? entry.title)
+    .url(entry.url)
+    .name(entry.title)
+    .subEvents(screenings|map(s => schema.event
+        .startDate("#{s.screeningDate|date('Y-m-d')}T#{s.screeningTime|time('H:i')}")
+        .name(s.title)
+        .location(s.locations.all|map(l => schema.place.name(l.title).address(l.postalAddress)))
+        .workFeatured(s.films.all|map(f => schema.movie.name(f.title)))
+    ))
+    .datePublished(entry.postDate)
+    .publisher(organization)
+    .copyrightYear(entry.postDate|date('Y'))
+
+|raw
+}}

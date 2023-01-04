@@ -71,7 +71,6 @@ class Plugin extends BasePlugin
                     App::parseEnv('@templates/' . $this->settings->templateRoot) :
                     $this->getBasePath() . '/templates';
 
-                $event->roots['ff'] = $templateRoot;
                 $event->roots['@ff'] = $templateRoot;
             }
         );

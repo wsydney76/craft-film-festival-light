@@ -1,0 +1,34 @@
+{% if entry.postalAddress %}
+    {% embed '_layouts/embeds/widget.twig' with {heading: 'Address'|t('ff-light')} %}
+        {% block content %}
+            <div>
+                {{ entry.postalAddress|nl2br }}
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endif %}
+
+{% if entry.phoneNumber or entry.email %}
+    {% embed '_layouts/embeds/widget.twig' with {heading: 'Contact'|t('ff-light')} %}
+        {% block content %}
+            <div class="space-y-4">
+                {% if entry.phoneNumber %}
+                    <div>
+                        {{ "Phone"|t('ff-light') }}: <a href="tel:{{ entry.phoneNumber }}">{{ entry.phoneNumber }}</a>
+                    </div>
+                {% endif %}
+                {% if entry.email %}
+                    <div>
+                        {{ "Email"|t('ff-light') }}: <a href="mailto:{{ entry.email }}">{{ entry.email }}</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endif %}
+
+{% include '@ff/_partials/sidebar-lists.twig' with {
+    lists: [
+        {heading: 'Diaries'|t('ff-light'), query: craft.entries.section('diary').relatedTo(entry), enabled: settings.enableDiaries},
+    ]
+} only %}

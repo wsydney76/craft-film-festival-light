@@ -1,0 +1,6 @@
+{% include '@ff/_partials/section-index.twig' with {
+    entry,
+    query: craft.entries
+        .section('person')
+        .orderBy('lastName, firstName')
+} only %}

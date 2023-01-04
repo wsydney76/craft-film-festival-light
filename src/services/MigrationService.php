@@ -70,7 +70,7 @@ class MigrationService extends Component
             'slug' => 'program',
             'parent' => $homePage,
             'fields' => [
-                'pageTemplate' => '@ff/partials/program.twig',
+                'pageTemplate' => '@ff/_partials/program.twig',
             ],
             'localized' => [
                 'de' => [
@@ -110,7 +110,7 @@ class MigrationService extends Component
                 'name' => 'Diary',
                 'plural' => 'Diaries',
                 'addIndexPage' => true,
-                'template' => 'ff/layouts/sidebar'
+                'template' => '@ff/_layouts/sidebar'
             ]) &&
 
             $this->createSection([
@@ -119,7 +119,7 @@ class MigrationService extends Component
                 'plural' => 'Competitions',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
-                'template' => 'ff/layouts/md'
+                'template' => '@ff/_layouts/md'
             ]) &&
 
             $this->createSection([
@@ -130,7 +130,7 @@ class MigrationService extends Component
                 'addIndexPage' => true,
                 'createEntriesField' => true,
                 'entriesFieldHandle' => 'filmSections',
-                'template' => 'ff/layouts/md'
+                'template' => '@ff/_layouts/md'
             ]) &&
 
             $this->createSection([
@@ -138,7 +138,7 @@ class MigrationService extends Component
                 'plural' => 'Films',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
-                'template' => 'ff/layouts/sidebar'
+                'template' => '@ff/_layouts/sidebar'
             ]) &&
 
             $this->createSection([
@@ -146,7 +146,7 @@ class MigrationService extends Component
                 'plural' => 'People',
                 'titleFormat' => '{firstName} {nameAffix} {lastName}',
                 'addIndexPage' => true,
-                'template' => 'ff/layouts/sidebar'
+                'template' => '@ff/_layouts/sidebar'
             ]) &&
 
             $this->createSection([
@@ -154,7 +154,7 @@ class MigrationService extends Component
                 'plural' => 'Locations',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
-                'template' => 'ff/layouts/sidebar'
+                'template' => '@ff/_layouts/sidebar'
             ]) &&
 
             $this->createSection([
@@ -162,21 +162,21 @@ class MigrationService extends Component
                 'plural' => 'Languages',
                 'addIndexPage' => false,
                 'createEntriesField' => true,
-                'template' => 'ff/layouts/md'
+                'template' => '@ff/_layouts/md'
             ]) &&
 
             $this->createSection([
                 'name' => 'Country',
                 'plural' => 'Countries',
                 'createEntriesField' => true,
-                'template' => 'ff/layouts/md'
+                'template' => '@ff/_layouts/md'
             ]) &&
 
             $this->createSection([
                 'name' => 'Genre',
                 'plural' => 'Genres',
                 'createEntriesField' => true,
-                'template' => 'ff/layouts/md'
+                'template' => '@ff/_layouts/md'
             ]) &&
 
 
@@ -184,7 +184,7 @@ class MigrationService extends Component
                 'name' => 'Sponsor',
                 'plural' => 'Sponsors',
                 'createEntriesField' => true,
-                'template' => 'ff/layouts/md'
+                'template' => '@ff/_layouts/md'
             ]) &&
 
             $this->createSection([
@@ -193,14 +193,14 @@ class MigrationService extends Component
                 'plural' => 'Topics',
                 'addIndexPage' => true,
                 'createEntriesField' => true,
-                'template' => 'ff/layouts/md'
+                'template' => '@ff/_layouts/md'
             ]) &&
 
             $this->createSection([
                 'name' => 'Screening',
                 'plural' => 'screenings',
                 'titleFormat' => '{films.one.title} - {locations.one.title} - {screeningDate|date(\'Y-m-d\')}:{screeningTime|time(\'H:i\')}',
-                'template' => 'ff/layouts/md'
+                'template' => '@ff/_layouts/md'
             ])
         );
     }
@@ -656,7 +656,7 @@ class MigrationService extends Component
                 'slug' => $baseUri,
                 'parent' => $homePage,
                 'fields' => [
-                    'pageTemplate' => "@ff/sections/$section->handle/index"
+                    'pageTemplate' => "@ff/_sections/$section->handle/index"
                 ],
                 'localized' => [
                     'de' => [
@@ -843,16 +843,16 @@ class MigrationService extends Component
         if (Craft::$app->request->isConsoleRequest) {
             Console::output($message);
         } else {
-            Craft::info($message, 'ff/install');
+            Craft::info($message, '@ff/_install');
         }
     }
 
     protected function logError(string $message, ?Model $model = null)
     {
-        Craft::error($message, 'ff/install');
+        Craft::error($message, '@ff/_install');
         $this->message($message);
         if ($model) {
-            Craft::error($model->errors, 'ff/install');
+            Craft::error($model->errors, '@ff/_install');
         }
     }
 

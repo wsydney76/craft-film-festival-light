@@ -1,0 +1,25 @@
+{% set image = entry.featuredImage.one ?? siteInfo.featuredImage.one %}
+{% set schema = craft.schema %}
+
+{% set cast = entry.cast.all %}
+{% set director = entry.director.all %}
+{% set languages = entry.languages.all %}
+{% set subtitleLanguages = entry.subtitleLanguages.all %}
+
+
+{{
+schema.movie
+    .image(image ? image.url(craft.app.config.custom.defaultTransform))
+    .author(schema.person.name(entry.author.name))
+    .description(entry.tagline ?? entry.title)
+    .url(entry.url)
+    .name(entry.title)
+    .actors(cast|map(person => schema.person.name(person.title).url(person.url)))
+    .director(director|map(person => schema.person.name(person.title).url(person.url)))
+    .datePublished(entry.postDate)
+    .publisher(organization)
+    .copyrightYear(entry.postDate|date('Y'))
+    .inLanguage(languages|map(l => schema.language.name(l.title)))
+    .subtitleLanguage(languages|map(l => schema.language.name(l.title)))
+|raw
+}}
