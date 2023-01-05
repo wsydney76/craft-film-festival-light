@@ -27,7 +27,7 @@
     {% endembed %}
 {% endif %}
 
-{% include '@ff/_partials/sidebar-lists.twig' with {
+{% include ff('_partials/sidebar-lists.twig') with {
     lists: [
         {heading: 'Diaries'|t('ff-light'), query: craft.entries.section('diary').relatedTo(entry), enabled: settings.enableDiaries},
     ]

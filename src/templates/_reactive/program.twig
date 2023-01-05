@@ -99,7 +99,7 @@
 {{ sprig.pushUrl("?screeningDate=#{screeningDate}&screeningTime=#{screeningTime}&locationId=#{locationId}&sectionId=#{sectionId}") }}
 
 <div class="mt-4">
-    {% include '@ff/_partials/screenings.twig' with {
+    {% include ff('_partials/screenings.twig') with {
         query
     } only %}
 </div>

@@ -1,4 +1,4 @@
-{% extends "@ff/_layouts/base.twig" %}
+{% extends ff("_layouts/base.twig") %}
 
 {% block content %}
 
@@ -7,7 +7,7 @@
         {% block contentTop %}
 
             <div class="mt-8">
-                {% include "@ff/_sections/#{entry.section.handle}/content-top.twig" ignore missing with {
+                {% include ff("_sections/#{entry.section.handle}/content-top.twig") ignore missing with {
                     entry, settings
                 } only %}
             </div>
@@ -16,7 +16,7 @@
 
         {% block contentBottom %}
 
-            {% include "@ff/_sections/#{entry.section.handle}/content-bottom.twig" ignore missing with {
+            {% include ff("_sections/#{entry.section.handle}/content-bottom.twig") ignore missing with {
                 entry, settings
             } only %}
 

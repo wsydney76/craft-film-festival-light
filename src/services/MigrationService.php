@@ -108,7 +108,7 @@ class MigrationService extends Component
 
             $this->createSection([
                 'name' => 'Diary',
-                'plural' => 'Diaries',
+                'plural' => 'Diary',
                 'addIndexPage' => true,
                 'template' => '@ff/_layouts/sidebar'
             ]) &&

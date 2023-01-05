@@ -19,28 +19,9 @@
 
     <div class="flex flex-wrap">
         {% for entry in entries %}
-            <div class="mb-4 mr-4 p-8 rounded shadow-xl {{ entry.screeningDate|date_modify('-1 day') > now ? 'bg-primary' : 'bg-gray-600' }} text-white space-y-4">
-                <div class="font-semibold">
-                    {{ entry.screeningDate|date('short') }} {{ entry.screeningDate|time('short') }}
-                </div>
-                {% if entry.section.handle != 'film' %}
-                    <div >
-                        {% for film in entry.films %}
-                            <div class="text-lg underline uppercase">
-                                {{ film.link }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                
-                {% if entry.section.handle != 'location' %}
-                    <div>
-                        {% for location in entry.locations %}
-                            {{ location.link }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+            {% include ff('_partials/screening.twig') with {
+            	entry
+            } only %}
         {% endfor %}
     </div>
     

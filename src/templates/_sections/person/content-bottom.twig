@@ -1,9 +1,9 @@
-{% include '@ff/_sections/film/screenings.twig' with {
+{% include ff('_sections/film/screenings.twig') with {
     entry
 } only %}
 
 {% if settings.enableCreditedWith %}
-    {% include '@ff/_sections/person/credited-with.twig' with {
+    {% include ff('_sections/person/credited-with.twig') with {
         entry
     } only %}
 {% endif %}

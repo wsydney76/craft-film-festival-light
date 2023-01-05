@@ -13,6 +13,7 @@ use craft\web\View;
 use wsydney76\ff\behaviors\EntryBehavior;
 use wsydney76\ff\models\Settings;
 use wsydney76\ff\services\MigrationService;
+use wsydney76\ff\twigextensions\TwigExtension;
 use yii\base\Event;
 
 /**
@@ -82,5 +83,7 @@ class Plugin extends BasePlugin
                 $event->behaviors[] = EntryBehavior::class;
             }
         );
+
+        Craft::$app->view->registerTwigExtension(new TwigExtension());
     }
 }

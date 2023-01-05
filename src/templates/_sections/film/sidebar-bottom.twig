@@ -46,7 +46,7 @@
     {% endblock %}
 {% endembed %}
 
-{% include '@ff/_partials/sidebar-lists.twig' with {
+{% include ff('_partials/sidebar-lists.twig') with {
     lists: [
         {heading: 'Section'|t('ff-light'), query: entry.filmSections, enabled: settings.enableSections},
         {heading: 'Competition'|t('ff-light'), query: entry.competitions, enabled: settings.enableCompetitions},
@@ -57,7 +57,7 @@
 } only %}
 
 {% if settings.enableSponsors %}
-    {% include '@ff/_partials/sponsor-widget.twig' with {
+    {% include ff('_partials/sponsor-widget.twig') with {
     	query: entry.sponsors
     } only %}
 {% endif %}

@@ -1,6 +1,6 @@
 {% set settings = craft.app.plugins.plugin('ff-light').settings %}
 
-{% include '@ff/_partials/sidebar-lists.twig' with {
+{% include ff('_partials/sidebar-lists.twig') with {
     lists: [
         {
             heading: 'Cast'|t('ff-light'),
@@ -30,7 +30,7 @@
     ]
 } only %}
 
-{% include '@ff/_partials/sidebar-lists.twig' with {
+{% include ff('_partials/sidebar-lists.twig') with {
     lists: [
         {heading: 'Diaries'|t('ff-light'), query: craft.entries.section('diary').relatedTo(entry), enabled: settings.enableDiaries},
         {heading: 'News'|t('ff-light'), query: craft.entries.section('news').relatedTo(entry), enabled: true},
