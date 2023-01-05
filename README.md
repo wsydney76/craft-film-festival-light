@@ -239,7 +239,7 @@ This means you have to update field layouts manually in order to add any new fie
 
 ## Integration for Package plugin (experimental)
 
-This plugin provides an experimental integration for the [Package plugin]({# https://github.com/wsydney76/craft-package#use-existing-sections-as-a-package #}).
+This plugin provides an experimental integration for the [Package plugin](https://github.com/wsydney76/craft-package#use-existing-sections-as-a-package).
 
 Maintain all screenings of a film as a package:
 
