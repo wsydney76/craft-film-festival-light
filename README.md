@@ -136,6 +136,10 @@ Add the plugins template directory to `tailwind.config.js`:
 ],
 ```
 
+### Permissions
+
+Update your user groups in order to enable edit permissions.
+
 Run `npm run build`.
 
 ### Navigation
@@ -166,8 +170,11 @@ Update the `sitemapSections` settings and include the sections you want to appea
 
 ```php
 'sitemapSections' => [ 
+    ['handle' => 'filmSection', 'orderBy' => 'title'],
     ['handle' => 'competition', 'orderBy' => 'title'],
     ['handle' => 'location', 'orderBy' => 'title'],
+    ['handle' => 'film', 'orderBy' => 'title'],
+    ['handle' => 'person', 'orderBy' => 'lastName, firstName'],
    ...
 ]
 ```
