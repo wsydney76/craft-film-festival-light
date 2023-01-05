@@ -1,0 +1,63 @@
+{# https://github.com/wsydney76/craft-package#use-existing-sections-as-a-package #}
+
+{% import '_includes/forms' as forms %}
+
+
+<h2>Create screening</h2>
+
+{% set films = craft.entries.section('film').status(null).orderBy('title').collect %}
+{% set locations = craft.entries.section('location').status(null).orderBy('title').collect %}
+
+<form id="screening-form">
+
+    {{ forms.hidden({
+        id: "screening-film",
+        name: "films",
+        value: entry.id
+    }) }}
+
+    {{ forms.selectField({
+        label: 'Location',
+        id: 'screening-location',
+        name: "locations",
+        options: locations|map(entry => {label: entry.title, value: entry.id}),
+        required: true
+    }) }}
+
+    {{ forms.dateTimeField({
+        label: 'Date and Time',
+        id: 'screening-datetime',
+        name: "datetime",
+        value: now,
+        required: true
+    }) }}
+
+
+    {{ forms.button({
+        label: 'Create screening',
+        id: 'screening-submitbutton',
+        class: 'submit',
+    }) }}
+</form>
+
+{% js %}
+document.getElementById('screening-submitbutton').addEventListener('click', function() {
+
+    const data = {
+        screening: Garnish.getPostData(document.getElementById('screening-form'))
+    }
+
+    Craft.sendActionRequest('POST', 'ff-light/screening/create', {data})
+        .then((response) => {
+            Craft.cp.displayNotice(response.data.message)
+            co_getSectionHtml('package-0-0-0')
+
+        })
+        .catch((error) => {
+            Craft.cp.displayError(error.response.data.message)
+        })
+    ;
+
+
+})
+{% endjs %}
