@@ -136,11 +136,11 @@ Add the plugins template directory to `tailwind.config.js`:
 ],
 ```
 
+Run `npm run build`.
+
 ### Permissions
 
 Update your user groups in order to enable edit permissions.
-
-Run `npm run build`.
 
 ### Navigation
 
