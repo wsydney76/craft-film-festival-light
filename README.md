@@ -183,7 +183,11 @@ Update the `sitemapSections` settings and include the sections you want to appea
 
 The plugin does not touch your home page.
 
-For a quick start, add a couple of `Featured Entries` to your home page (e.g. diaries/sections) and add this to your template:
+For a quick start, add a couple of `Featured Entries` to your home page (e.g. diaries/sections).
+
+Update the added entries with featured image/tagline.
+
+Add this to your template:
 
 ```twig
 {% include '@ff/_blocks/home.twig' %}
@@ -192,6 +196,24 @@ For a quick start, add a couple of `Featured Entries` to your home page (e.g. di
 Create a hero area that may point to the program page.
 
 ## Templating
+
+The plugin uses a custom `ff` twig function to include/embed templates, e.g. `include ff('_sections/film/screenings.twig')`.
+
+This results in the following array, so that your own templates will take precedence.
+
+```php
+array:3 [
+  0 => "_sections/film/screenings.twig"
+  1 => "_ff/_sections/film/screenings.twig"
+  2 => "@ff/_sections/film/screenings.twig"
+]
+```
+
+If you want to refer directly to the plugins templates (`@ff/...`), you can add a twig namespace to your PhpStorm settings, so that autocompletion works:
+
+* Namespace: ff
+* Path: `vendor/wsydney76/craft-film-festival-light/src/templates`
+* Type: `ADD_PATH`
 
 There are two ways to use your own templates:
 
