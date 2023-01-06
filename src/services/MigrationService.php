@@ -5,6 +5,7 @@ namespace wsydney76\ff\services;
 use Craft;
 use craft\base\Field;
 use craft\base\Model;
+use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\fieldlayoutelements\CustomField;
 use craft\fieldlayoutelements\LineBreak;
@@ -23,6 +24,7 @@ use craft\models\Section;
 use craft\models\Section_SiteSettings;
 use craft\models\Site;
 use craft\records\FieldGroup as FieldGroupRecord;
+use Faker\Factory;
 use modules\main\MainModule;
 use yii\base\Component;
 use function collect;
@@ -44,10 +46,14 @@ class MigrationService extends Component
     protected $fieldGroup;
     protected $doUpdateFieldlayout = [];
 
+    protected $faker;
+
 
     public function install(): bool
     {
         // Craft::$app->runAction('gc', ['interactive' => false]);
+
+        $this->faker = Factory::create();
 
         $this->createPages() &&
         $this->createFieldGroup() &&
@@ -110,6 +116,7 @@ class MigrationService extends Component
                 'name' => 'Diary',
                 'plural' => 'Diary',
                 'addIndexPage' => true,
+                'withHeroFields' => true,
                 'template' => '@ff/_layouts/sidebar'
             ]) &&
 
@@ -118,6 +125,7 @@ class MigrationService extends Component
                 'name' => 'Competition',
                 'plural' => 'Competitions',
                 'addIndexPage' => true,
+                'withHeroFields' => true,
                 'createEntriesField' => true,
                 'template' => '@ff/_layouts/md'
             ]) &&
@@ -128,6 +136,7 @@ class MigrationService extends Component
                 'plural' => 'Sections',
                 'handle' => 'filmSection',
                 'addIndexPage' => true,
+                'withHeroFields' => true,
                 'createEntriesField' => true,
                 'entriesFieldHandle' => 'filmSections',
                 'template' => '@ff/_layouts/md'
@@ -460,7 +469,7 @@ class MigrationService extends Component
             'handle' => 'remarks',
             'name' => 'Remarks',
             'translationMethod' => Field::TRANSLATION_METHOD_LANGUAGE,
-            '$charLimit' => 80
+            'charLimit' => 80
         ]);
 
         return true;
@@ -608,6 +617,7 @@ class MigrationService extends Component
         $baseUri = $config['baseUri'] ?? strtolower($plural);
         $titleFormat = $config['titleFormat'] ?? '';
         $addIndexPage = $config['addIndexPage'] ?? false;
+        $withHeroFields = $config['withHeroFields'] ?? false;
         $createEntriesField = $config['createEntriesField'] ?? false;
         $template = $config['template'] ?? "ff/sections/$handle";
 
@@ -657,15 +667,25 @@ class MigrationService extends Component
         if ($addIndexPage) {
             $homePage = Entry::findOne(['slug' => '__home__']);
 
-            MainModule::getInstance()->content->createEntry([
+            $fields = [
+                'pageTemplate' => "@ff/_sections/$section->handle/index"
+            ];
+
+            $contentService = MainModule::getInstance()->content;
+
+            if ($withHeroFields) {
+                $image = $this->getRandomImage();
+                $fields['featuredImage'] = $image ? [$image->id] : null;
+                $fields['tagline'] = $this->faker->text(40);
+            }
+
+            $contentService->createEntry([
                 'section' => 'page',
                 'type' => 'pageTemplate',
                 'title' => $plural,
                 'slug' => $baseUri,
                 'parent' => $homePage,
-                'fields' => [
-                    'pageTemplate' => "@ff/_sections/$section->handle/index"
-                ],
+                'fields' => $fields,
                 'localized' => [
                     'de' => [
                         'title' => Craft::t('ff-light', $plural, language: 'de_DE'),
@@ -862,6 +882,16 @@ class MigrationService extends Component
         if ($model) {
             Craft::error($model->errors, '@ff/_install');
         }
+    }
+
+    protected function getRandomImage($width = 1900)
+    {
+        return Asset::find()
+            ->volume('images')
+            ->kind('image')
+            ->width('> ' . $width)
+            ->orderBy(Craft::$app->db->driverName === 'mysql' ? 'RAND()' : 'RANDOM()')
+            ->one();
     }
 
 }
