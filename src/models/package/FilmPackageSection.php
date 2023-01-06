@@ -1,6 +1,6 @@
 <?php
 
-namespace wsydney76\ff\models;
+namespace wsydney76\ff\models\package;
 
 use Illuminate\Support\Collection;
 use wsydney76\package\models\PackageSection;

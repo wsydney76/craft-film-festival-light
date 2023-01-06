@@ -35,6 +35,7 @@ class ScreeningController extends Controller
         $entry->films = [$films];
         $entry->setFieldValue($fieldHandle, [$films]);
         $entry->locations = [$screening['locations']];
+        $entry->remarks = $screening['remarks'];
 
         // Avoid using current date as default if date is blank
         if (!trim($screening['datetime[date]'])) {
@@ -59,30 +60,43 @@ class ScreeningController extends Controller
             return $this->asFailure(Craft::t('site', 'Screening Date Time is not valid.'),);
         }
 
-        // Check for double clicks
-//        if ($entry->screeningDateTime) {
-//            // Todo: Check for overlaps
-//            $exits = Entry::find()->screeningDateTime($entry->screeningDateTime)
-//                ->location($entry->location)
-//                ->film($entry->film)
-//                ->screeningDateTime($entry->screeningDateTime)
-//                ->exists();
-//
-//            if ($exits) {
-//                return $this->asFailure(Craft::t('site', 'Screening overlaps with existing screening.'));
-//            }
-//        }
-
-
         $entry->screeningDate = $screeningDateTime->format('Y-m-d');
         $entry->screeningTime = $screeningDateTime->format('H:i');
 
+        // Check for double clicks
+        if ($entry->screeningDate && $entry->screeningTime) {
+            // Todo: Check for overlaps
+            $exits = Entry::find()
+                ->locations($screening['locations'])
+                ->films($screening['films'])
+                ->status(null)
+                ->drafts(null)
+                ->provisionalDrafts(null)
+                ->screeningDate($entry->screeningDate)
+                ->screeningTime($entry->screeningTime->format('H:i'))
+                ->exists();
+
+            if ($exits) {
+                return $this->asFailure(Craft::t('site', 'Screening overlaps with existing screening.'));
+            }
+        }
+
+
+
         $entry->scenario = Element::SCENARIO_LIVE;
 
-        if (!Craft::$app->drafts->saveElementAsDraft($entry, Craft::$app->user->identity->id)) {
-            return $this->asFailure(
-                implode(' - ', $entry->getFirstErrors()),
-            );
+        if ($screening['createDraft']) {
+            if (!Craft::$app->drafts->saveElementAsDraft($entry, Craft::$app->user->identity->id)) {
+                return $this->asFailure(
+                    implode(' - ', $entry->getFirstErrors()),
+                );
+            }
+        } else {
+            if (!Craft::$app->elements->saveElement($entry)) {
+                return $this->asFailure(
+                    implode(' - ', $entry->getFirstErrors()),
+                );
+            }
         }
 
         return $this->asSuccess(Craft::t('site', 'Screening created.'));

@@ -2,19 +2,40 @@
 
 {% import '_includes/forms' as forms %}
 
+{% set refreshSectionPath = refreshSectionPath ?? 'package-0-0-0' %}
+{% set createDraft = createDraft is defined ? createDraft : true %}
+{% set showHeading = showHeading is defined ? showHeading : true %}
 
-<h2>Create screening</h2>
+{% if showHeading %}
+    <h2>Create screening</h2>
+{% endif %}
 
-{% set films = craft.entries.section('film').status(null).orderBy('title').collect %}
-{% set locations = craft.entries.section('location').status(null).orderBy('title').collect %}
+{% set locations = craft.entries.section('location').drafts(null).provisionalDrafts(null).status(null).orderBy('title').collect %}
 
 <form id="screening-form">
 
     {{ forms.hidden({
-        id: "screening-film",
-        name: "films",
-        value: entry.id
+        id: "create-draft",
+        name: "createDraft",
+        value: createDraft|integer
     }) }}
+
+    {% if entry is defined %}
+        {{ forms.hidden({
+            id: "screening-film",
+            name: "films",
+            value: entry.id
+        }) }}
+    {% else %}
+        {% set films = craft.entries.section('film').drafts(null).provisionalDrafts(null).status(null).orderBy('title').collect %}
+        {{ forms.selectField({
+            label: 'Film',
+            id: "screening-film",
+            name: "films",
+            options: films|map(entry => {label: entry.title, value: entry.id}),
+            required: true
+        }) }}
+    {% endif %}
 
     {{ forms.selectField({
         label: 'Location',
@@ -32,6 +53,11 @@
         required: true
     }) }}
 
+    {{ forms.textAreaField({
+        label: 'Remarks',
+        id: 'screening-remark',
+        name: "remarks"
+    }) }}
 
     {{ forms.button({
         label: 'Create screening',
@@ -39,6 +65,10 @@
         class: 'submit',
     }) }}
 </form>
+
+{% js %}
+refreshSectionPath = '{{ refreshSectionPath }}'
+{% endjs %}
 
 {% js %}
 document.getElementById('screening-submitbutton').addEventListener('click', function() {
@@ -50,7 +80,7 @@ document.getElementById('screening-submitbutton').addEventListener('click', func
     Craft.sendActionRequest('POST', 'ff-light/screening/create', {data})
         .then((response) => {
             Craft.cp.displayNotice(response.data.message)
-            co_getSectionHtml('package-0-0-0')
+            co_getSectionHtml(refreshSectionPath)
 
         })
         .catch((error) => {

@@ -45,6 +45,7 @@ The templates reuse layout elements from the starter, like cards and widgets.
 * Films
 * Location
 * Screening date/time
+* Remarks
 
 ### Section
 
@@ -215,6 +216,8 @@ If you want to refer directly to the plugins templates (`@ff/...`), you can add 
 * Path: `vendor/wsydney76/craft-film-festival-light/src/templates`
 * Type: `ADD_PATH`
 
+The plugin adds the `@ff` template root for site requests, inside the CP use `ff-light`.
+
 There are two ways to use your own templates:
 
 ### Replace single templates
@@ -251,7 +254,7 @@ Example `config/package.php` config file:
 ```php
 <?php
 
-use wsydney76\ff\models\FilmPackageSection;
+use wsydney76\ff\models\package\FilmPackageSection;
 
 return [
 
@@ -269,3 +272,51 @@ return [
     ],
 ];
 ```
+
+### Use in Contentoverview plugin
+
+Template/Controller provided for the `Package` plugin integration can be reused
+in `Contentoverview` plugin pages in order to maintain screening entries.
+
+For example, create this tab configuration:
+
+```php
+'tabs' => [
+  
+    $co->createColumn(7, [
+        $co->createSection()
+            ->heading('Screenings')
+            ->section('screening')
+            ->layout('list')
+            ->orderBy('screeningDate, screeningTime')
+            ->scope('all')
+            ->filters([
+                $co->createFilter('field', 'films'),
+                $co->createFilter('field', 'locations'),
+            ])
+            ->buttons(false)
+            ->scope('all')
+            ->actions([
+                'delete',
+                'release',
+            ])
+            ->limit(50)
+    ]),
+        $co->createColumn(5, [
+            $co->createCustomSection()
+                ->heading('Create Screening')
+                ->customTemplate('custom/screenings-form.twig'),
+        ]),
+    ]
+```
+
+Place this in the customtemplate:
+
+```twig
+{% include 'ff-light/_package/screenings-form.twig' with {
+    createDraft: false,
+    showHeading: false,
+    refreshSectionPath: 'default-0-0-0' // the section path to be be refreshed
+} %}
+```
+

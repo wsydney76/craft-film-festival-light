@@ -199,7 +199,7 @@ class MigrationService extends Component
             $this->createSection([
                 'name' => 'Screening',
                 'plural' => 'screenings',
-                'titleFormat' => '{films.one.title} - {locations.one.title} - {screeningDate|date(\'Y-m-d\')}:{screeningTime|time(\'H:i\')}',
+                'titleFormat' => '{films.one.status(null).drafts(null).provisionalDrafts(null).title} - {locations.status(null).drafts(null).provisionalDrafts(null).one.title} - {screeningDate|date(\'Y-m-d\')}:{screeningTime|time(\'H:i\')}',
                 'template' => '@ff/_layouts/md'
             ])
         );
@@ -454,6 +454,15 @@ class MigrationService extends Component
             'minuteIncrement' => 30
         ]);
 
+        $this->createField([
+            'class' => PlainText::class,
+            'groupId' => $fieldGroup->id,
+            'handle' => 'remarks',
+            'name' => 'Remarks',
+            'translationMethod' => Field::TRANSLATION_METHOD_LANGUAGE,
+            '$charLimit' => 80
+        ]);
+
         return true;
     }
 
@@ -530,6 +539,7 @@ class MigrationService extends Component
             'films', 'locations',
             ['screeningDate', ['width' => 25, 'required' => true]],
             ['screeningTime', ['width' => 25, 'required' => true]],
+            'remarks'
         ]);
 
         return true;
@@ -567,11 +577,9 @@ class MigrationService extends Component
         ]);
 
         $this->updateElementSource('Festival', 'screening', [
-            "field:{$fields->getFieldByHandle('films')->uid}",
-            "field:{$fields->getFieldByHandle('locations')->uid}",
-            "field:{$fields->getFieldByHandle('screeningDate')->uid}",
-            "field:{$fields->getFieldByHandle('screeningTime')->uid}",
-            ...$defaultTableAttributes
+            "field:{$fields->getFieldByHandle('remarks')->uid}",
+            'author',
+            'dateCreated'
         ]);
 
         foreach ($defaultFestivalSections as $section) {
