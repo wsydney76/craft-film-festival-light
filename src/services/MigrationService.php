@@ -513,7 +513,7 @@ class MigrationService extends Component
                         ],
                         [
                             'class' => Entries::class,
-                            'handle' => 'nominee',
+                            'handle' => 'nominees',
                             'name' => 'Nominees',
                             'sources' => [
                                 "section:$filmSection->uid",

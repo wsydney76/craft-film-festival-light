@@ -1,44 +1,46 @@
-{% set excludedIds = null %}
-{% if exclude is defined %}
-    {% set excludedIds = craft.matrixBlocks
-        .field('awards')
-        .relatedTo({targetElement: entry, field: exclude})
-    .ids %}
-{% endif %}
+{% set target = entry.id %}
 
-{% set query = craft.matrixBlocks
-    .field('awards')
-    .relatedTo({targetElement: entry, field: field})
-%}
+{{ _self.displayAwards('Winner'|t('ff-light'), target, 'winner', false) }}
 
-{% if excludedIds %}
-    {% do query.id(['not']|merge(excludedIds)) %}
-{% endif %}
+{{ _self.displayAwards('Nominee'|t('ff-light'), target, 'nominees', true) }}
 
-{% set blocks = query.collect %}
+{% macro displayAwards(heading, target, fieldName, wide = true) %}
 
-{% if blocks.count %}
-    {% include '_layouts/partials/headline.twig' with {
-    	text: heading
-    } only %}
+    {% set entries = craft.entries
+        .section('award')
+        .relatedTo({targetElement: target, field: "awards.#{fieldName}"})
+        .with([
+            ['featuredImage'],
+            ['awards', {relatedTo: {targetElement: target, field: fieldName}}]
+        ])
+    .collect %}
 
-    {% embed '_layouts/embeds/grid.twig' with {wide: true} %}
-        {% block content %}
-            {% for block in blocks %}
-                {% embed '_layouts/embeds/card.twig' with {
-                	entry: block.owner,
-                    block
-                } only %}
-                    {% block content %}
-                        {% embed '_layouts/embeds/card-text.twig' %}
+    {% if entries.count %}
+        {% include '_layouts/partials/headline.twig' with {
+            text: heading
+        } only %}
+
+        {% embed '_layouts/embeds/grid.twig' with {wide: wide} %}
+            {% block content %}
+                {% for entry in entries %}
+                    {% for block in entry.awards.all %}
+                        {% embed '_layouts/embeds/card.twig' with {
+                            entry,
+                            block
+                        } only %}
                             {% block content %}
-                                {{ block.description }}
+                                {% embed '_layouts/embeds/card-text.twig' %}
+                                    {% block content %}
+                                        {{ block.description }}
+                                    {% endblock %}
+                                {% endembed %}
                             {% endblock %}
                         {% endembed %}
-                    {% endblock %}
-                {% endembed %}
-            {% endfor %}
-        {% endblock %}
-    {% endembed %}
+                    {% endfor %}
+                {% endfor %}
+            {% endblock %}
+        {% endembed %}
 
-{% endif %}
+    {% endif %}
+
+{% endmacro %}

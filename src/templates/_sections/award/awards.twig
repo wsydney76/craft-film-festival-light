@@ -14,7 +14,7 @@
                 {% include '_layouts/partials/cards.twig' with {
                     heading: block.description ~ ': ' ~  'Nominees'|t('ff-light'),
                     wide: true,
-                    query: block.nominee
+                    query: block.nominees
                 } only %}
             </div>
         {% endfor %}
