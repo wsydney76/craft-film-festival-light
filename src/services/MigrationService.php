@@ -492,6 +492,10 @@ class MigrationService extends Component
                             'translationMethod' => Field::TRANSLATION_METHOD_LANGUAGE,
                             'charLimit' => 80,
                             'searchable' => true,
+                            'layoutConfig' => [
+                                'required' => true,
+                                'width' => 25,
+                            ]
                         ],
                         [
                             'class' => Entries::class,
@@ -502,7 +506,10 @@ class MigrationService extends Component
                                 "section:$personSection->uid",
                             ],
                             'selectionLabel' => 'Add a film/person',
-                            'searchable' => true
+                            'searchable' => true,
+                            'layoutConfig' => [
+                                'width' => 25,
+                            ]
                         ],
                         [
                             'class' => Entries::class,
@@ -513,7 +520,10 @@ class MigrationService extends Component
                                 "section:$personSection->uid",
                             ],
                             'selectionLabel' => 'Add a film/person',
-                            'searchable' => true
+                            'searchable' => true,
+                            'layoutConfig' => [
+                                'width' => 25,
+                            ]
                         ],
                     ]
                 ]
@@ -789,10 +799,17 @@ class MigrationService extends Component
         }
 
         $blocktypes = [];
+        $layoutConfigs = [];
         foreach ($config['blocktypes'] as $blocktypeConfig) {
             $fields = [];
             foreach ($blocktypeConfig['fields'] as $field) {
-                $fields[] = Craft::createObject($field);
+                $fieldConfig = $field;
+                if (isset($fieldConfig['layoutConfig'])) {
+                    $layoutConfigs[$fieldConfig['handle']] = $fieldConfig['layoutConfig'];
+                    unset($fieldConfig['layoutConfig']);
+                }
+
+                $fields[] = Craft::createObject($fieldConfig);
             }
             $blocktype = new MatrixBlockType();
             $blocktype->handle = $blocktypeConfig['handle'];
@@ -803,7 +820,10 @@ class MigrationService extends Component
             $tab->sortOrder = 1;
             $tab->layout = $layout;
             $tab->setElements(collect($fields)
-                ->map(fn ($field) =>new CustomField($field))
+                ->map(function ($field) use ($layoutConfigs) {
+                    $layoutConfig = $layoutConfigs[$field->handle] ?? [];
+                    return new CustomField($field, $layoutConfig);
+                })
                 ->toArray()
             );
             $layout->setTabs([$tab]);
