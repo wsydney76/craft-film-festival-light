@@ -128,7 +128,6 @@ class MigrationService extends Component
                 'plural' => 'Awards',
                 'addIndexPage' => true,
                 'withHeroFields' => true,
-                'createEntriesField' => true,
                 'template' => '@ff/_layouts/md'
             ]) &&
 
@@ -499,8 +498,8 @@ class MigrationService extends Component
                             'handle' => 'winner',
                             'name' => 'Winner',
                             'sources' => [
-                                "section:filmSection->uid",
-                                "section:personSection->uid",
+                                "section:$filmSection->uid",
+                                "section:$personSection->uid",
                             ],
                             'selectionLabel' => 'Add a film/person',
                             'searchable' => true
@@ -510,8 +509,8 @@ class MigrationService extends Component
                             'handle' => 'nominee',
                             'name' => 'Nominees',
                             'sources' => [
-                                "section:filmSection->uid",
-                                "section:personSection->uid",
+                                "section:$filmSection->uid",
+                                "section:$personSection->uid",
                             ],
                             'selectionLabel' => 'Add a film/person',
                             'searchable' => true

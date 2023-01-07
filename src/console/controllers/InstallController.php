@@ -154,7 +154,7 @@ class InstallController extends SeedController
         ]);
 
         $competition = $this->createEntry([
-            'section' => 'competition',
+            'section' => 'award',
             'type' => 'default',
             'title' => 'Golden Pineapple',
             'slug' => 'golden-pineapple',
@@ -282,7 +282,6 @@ class InstallController extends SeedController
                 'camera' => [$person1->id],
                 'director' => [$person2->id],
                 'filmSections' => [$filmSection->id],
-                'competitions' => [$competition->id],
                 'topics' => [$topic->id],
                 'sponsors' => [$sponsor->id],
                 'languages' => [$language1->id],
