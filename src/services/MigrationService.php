@@ -14,12 +14,14 @@ use craft\fieldlayoutelements\TitleField;
 use craft\fields\Assets;
 use craft\fields\Date;
 use craft\fields\Entries;
+use craft\fields\Matrix;
 use craft\fields\Number;
 use craft\fields\PlainText;
 use craft\fields\Time;
 use craft\helpers\Console;
 use craft\models\FieldGroup;
 use craft\models\FieldLayoutTab;
+use craft\models\MatrixBlockType;
 use craft\models\Section;
 use craft\models\Section_SiteSettings;
 use craft\models\Site;
@@ -122,8 +124,8 @@ class MigrationService extends Component
 
             $this->createSection([
                 'type' => Section::TYPE_STRUCTURE,
-                'name' => 'Competition',
-                'plural' => 'Competitions',
+                'name' => 'Award',
+                'plural' => 'Awards',
                 'addIndexPage' => true,
                 'withHeroFields' => true,
                 'createEntriesField' => true,
@@ -472,6 +474,53 @@ class MigrationService extends Component
             'charLimit' => 80
         ]);
 
+        $filmSection = Craft::$app->sections->getSectionByHandle('film');
+        $personSection = Craft::$app->sections->getSectionByHandle('person');
+        $this->createMatrixField([
+            'groupId' => $fieldGroup->id,
+            'handle' => 'awards',
+            'name' => 'Awards',
+            'searchable' => true,
+            'blocktypes' => [
+                [
+                    'name' => 'Award',
+                    'handle' => 'award',
+                    'fields' => [
+                        [
+                            'class' => PlainText::class,
+                            'handle' => 'description',
+                            'name' => 'Description',
+                            'translationMethod' => Field::TRANSLATION_METHOD_LANGUAGE,
+                            'charLimit' => 80,
+                            'searchable' => true,
+                        ],
+                        [
+                            'class' => Entries::class,
+                            'handle' => 'winner',
+                            'name' => 'Winner',
+                            'sources' => [
+                                "section:filmSection->uid",
+                                "section:personSection->uid",
+                            ],
+                            'selectionLabel' => 'Add a film/person',
+                            'searchable' => true
+                        ],
+                        [
+                            'class' => Entries::class,
+                            'handle' => 'nominee',
+                            'name' => 'Nominees',
+                            'sources' => [
+                                "section:filmSection->uid",
+                                "section:personSection->uid",
+                            ],
+                            'selectionLabel' => 'Add a film/person',
+                            'searchable' => true
+                        ],
+                    ]
+                ]
+            ]
+        ]);
+
         return true;
     }
 
@@ -482,7 +531,7 @@ class MigrationService extends Component
                 'originalTitle',
                 ['featuredImage', ['width' => 25, 'required' => true]], ['filmPoster', ['width' => 25]],
                 'tagline',
-                ['filmSections', ['width' => 25]], ['competitions', ['width' => 25]],
+                ['filmSections', ['width' => 25]],
                 ['topics', ['width' => 25]], ['sponsors', ['width' => 25]],
                 'bodyContent'
             ],
@@ -519,8 +568,8 @@ class MigrationService extends Component
             'bodyContent'
         ]);
 
-        $this->updateFieldLayout('competition', [
-            'heroArea', 'featuredImage', 'tagline', 'jury', 'bodyContent'
+        $this->updateFieldLayout('award', [
+            'heroArea', 'featuredImage', 'tagline', 'jury', 'bodyContent', 'awards'
         ]);
 
         $this->updateFieldLayout('diary', [
@@ -558,7 +607,7 @@ class MigrationService extends Component
     {
         $fields = Craft::$app->fields;
 
-        $defaultFestivalSections = ['filmSection', 'competition', 'sponsor', 'diary'];
+        $defaultFestivalSections = ['filmSection', 'award', 'sponsor', 'diary'];
         $categorySections = ['topic', 'country', 'genre'];
 
         $defaultTableAttributes = [
@@ -605,7 +654,6 @@ class MigrationService extends Component
         ]);
 
         return true;
-
     }
 
     private function createSection(array $config): bool
@@ -711,13 +759,11 @@ class MigrationService extends Component
         return true;
     }
 
-
     protected function createField(array $config)
     {
 
         extract($config, EXTR_OVERWRITE);
 
-        // Create package field
         $this->fields[$handle] = Craft::$app->fields->getFieldByHandle($handle);
         if ($this->fields[$handle]) {
             return true;
@@ -733,6 +779,53 @@ class MigrationService extends Component
         $this->fields[$handle] = $field;
 
         $this->message("Field {$name} created.");
+        return true;
+    }
+
+    protected function createMatrixField(array $config): bool{
+
+        $this->fields[$config['handle']] = Craft::$app->fields->getFieldByHandle($config['handle']);
+        if ($this->fields[$config['handle']]) {
+            return true;
+        }
+
+        $blocktypes = [];
+        foreach ($config['blocktypes'] as $blocktypeConfig) {
+            $fields = [];
+            foreach ($blocktypeConfig['fields'] as $field) {
+                $fields[] = Craft::createObject($field);
+            }
+            $blocktype = new MatrixBlockType();
+            $blocktype->handle = $blocktypeConfig['handle'];
+            $blocktype->name = $blocktypeConfig['name'];
+            $layout = $blocktype->getFieldLayout();
+            $tab = new FieldLayoutTab();
+            $tab->name = 'Content';
+            $tab->sortOrder = 1;
+            $tab->layout = $layout;
+            $tab->setElements(collect($fields)
+                ->map(fn ($field) =>new CustomField($field))
+                ->toArray()
+            );
+            $layout->setTabs([$tab]);
+
+            $blocktypes[] = $blocktype;
+        }
+
+        $matrixField = new Matrix();
+        $matrixField->handle = $config['handle'];
+        $matrixField->name = $config['name'];
+        $matrixField->groupId = $config['groupId'];
+        $matrixField->setBlockTypes($blocktypes);
+
+        if (!Craft::$app->fields->saveField($matrixField)) {
+            $this->logError("Could not save field {$config['handle']}", $matrixField);
+            return false;
+        }
+
+        $this->fields[$config['handle']] = $field;
+
+        $this->message("Field {$config['name']} created.");
         return true;
     }
 
@@ -826,7 +919,7 @@ class MigrationService extends Component
         // Check for existing source
         foreach ($config['craft\\elements\\Entry'] as $source) {
             if ($source['type'] === 'native' && $source['key'] === $key) {
-               return;
+                return;
             }
         }
 
@@ -858,7 +951,6 @@ class MigrationService extends Component
         Craft::$app->projectConfig->set('elementSources', $config);
         $this->message("ElementSource for $sectionHandle updated.");
     }
-
 
 
     private function getFieldGroup(string $fieldGroup)
