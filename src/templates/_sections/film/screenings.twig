@@ -10,17 +10,18 @@
     {% do query.andWith('locations') %}
 {% endif %}
 
-{% set entries = query.collect %}
+{% set screenings = query.collect %}
 
-{% if entries.count() %}
+{% if screenings.count() %}
     {% include '_layouts/partials/headline.twig' with {
         text: 'Screenings'|t('ff-light')
     } only %}
 
     <div class="flex flex-wrap">
-        {% for entry in entries %}
+        {% for screening in screenings %}
             {% include ff('_partials/screening.twig') with {
-            	entry
+            	entry: screening,
+                scope: entry.section.handle
             } only %}
         {% endfor %}
     </div>
