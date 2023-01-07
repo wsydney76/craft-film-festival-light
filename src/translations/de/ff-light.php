@@ -48,4 +48,15 @@ return [
     'awards' => 'auszeichnungen',
     'Award' => 'Auszeichnung',
     'Awards' => 'Auszeichnungen',
+    'Jury' => 'Jury',
+    'New' => 'Neu',
+    'Email' => 'E-Mail',
+    'Address' => 'Adresse',
+    'Film' => 'Film',
+    'Phone' => 'Telefon',
+    'News' => 'News',
+    'Nominees' => 'Nominierte',
+    'Location' => 'Location',
+    'Contact' => 'Kontact',
+    'Winner' => 'Gewinner'
 ];

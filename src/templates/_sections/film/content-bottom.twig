@@ -1,3 +1,16 @@
+{% include ff('_partials/awards.twig') with {
+    field: 'winner',
+    heading: 'Winner'|t('ff-light'),
+    entry
+} only %}
+
+{% include ff('_partials/awards.twig') with {
+    field: 'nominee',
+    exclude: 'winner',
+    heading: 'Nominee'|t('ff-light'),
+    entry
+} only %}
+
 {% include ff('_sections/film/screenings.twig') with {
     entry
 } only %}

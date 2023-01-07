@@ -58,7 +58,7 @@
         <div>
             <select data-sprig name="sectionId">
                 <option value="" {{ not sectionId ? 'selected' }}>{{ 'All sections'|t('ff-light') }}</option>
-                {% for section in craft.entries.section(['filmSection','competition']).orderBy('title').all %}
+                {% for section in craft.entries.section(['filmSection']).orderBy('title').all %}
                     <option value="{{ section.id }}" {{ sectionId == section.id ? 'selected' }}>{{ section.title }}</option>
                 {% endfor %}
             </select>

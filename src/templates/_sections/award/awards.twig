@@ -1,0 +1,22 @@
+{% set blocks = entry.awards.collect %}
+
+{% if blocks.count() %}
+
+    <div class="space-y-4">
+        {% for block in blocks %}
+        	<div>
+                {% include '_layouts/partials/cards.twig' with {
+                    heading: block.description ~ ': ' ~  'Winner'|t('ff-light'),
+                    wide: false,
+                    query: block.winner
+                } only %}
+
+                {% include '_layouts/partials/cards.twig' with {
+                    heading: block.description ~ ': ' ~  'Nominees'|t('ff-light'),
+                    wide: true,
+                    query: block.nominee
+                } only %}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

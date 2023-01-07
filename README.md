@@ -18,7 +18,7 @@ The templates reuse layout elements from the starter, like cards and widgets.
 
 * Original title
 * Film poster
-* Sections/Competitions/Topics/Sponsors
+* Sections/Topics/Sponsors
 * FSK
 * Runtime
 * Release year
@@ -49,11 +49,15 @@ The templates reuse layout elements from the starter, like cards and widgets.
 
 ### Section
 
-### Competition
+e.g. Main Competition, short films, young meck-pomm cinema
+
+### Award
 
 * Jury
-
-Basically the same as a section, but add a `Jury` field. Enter award winners/nominees as a text block.
+* Awards:
+* * Description (e.g. Best Film, Best screen play)
+* * Winner (film or person(s))
+* * Nominees (film or person(s))
 
 ### Sponsor
 

@@ -1,0 +1,44 @@
+{% set excludedIds = null %}
+{% if exclude is defined %}
+    {% set excludedIds = craft.matrixBlocks
+        .field('awards')
+        .relatedTo({targetElement: entry, field: exclude})
+    .ids %}
+{% endif %}
+
+{% set query = craft.matrixBlocks
+    .field('awards')
+    .relatedTo({targetElement: entry, field: field})
+%}
+
+{% if excludedIds %}
+    {% do query.id(['not']|merge(excludedIds)) %}
+{% endif %}
+
+{% set blocks = query.collect %}
+
+{% if blocks.count %}
+    {% include '_layouts/partials/headline.twig' with {
+    	text: heading
+    } only %}
+
+    {% embed '_layouts/embeds/grid.twig' with {wide: true} %}
+        {% block content %}
+            {% for block in blocks %}
+                {% embed '_layouts/embeds/card.twig' with {
+                	entry: block.owner,
+                    block
+                } only %}
+                    {% block content %}
+                        {% embed '_layouts/embeds/card-text.twig' %}
+                            {% block content %}
+                                {{ block.description }}
+                            {% endblock %}
+                        {% endembed %}
+                    {% endblock %}
+                {% endembed %}
+            {% endfor %}
+        {% endblock %}
+    {% endembed %}
+
+{% endif %}

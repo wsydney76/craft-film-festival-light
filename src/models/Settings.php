@@ -14,7 +14,8 @@ class Settings extends Model
 
     public bool $enableSponsors = true;
     public bool $enableTopics = true;
-    public bool $enableCompetitions = true;
+    public bool $enableAwards = true;
+
     public bool $enableSections = true;
     public bool $enableScript = true;
     public bool $enableCamera = true;
