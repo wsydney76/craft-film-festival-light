@@ -59,5 +59,8 @@ return [
     'Nominees' => 'Nominierte',
     'Location' => 'Location',
     'Contact' => 'Kontact',
-    'Winner' => 'Gewinner'
+    'Winner' => 'Gewinner',
+    'Nominee' => 'Nominiert',
+    'Load more' => 'Mehr laden',
+    'Nothing found' => 'Nichts gefunden',
 ];

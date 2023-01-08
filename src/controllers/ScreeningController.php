@@ -54,13 +54,16 @@ class ScreeningController extends Controller
             'timezone' => $screening['datetime[timezone]'],
         ]);
 
-
         // Avoid 'cannot be blank' message if date/time is not empty but could not be converted to a DateTime object.
         if (!$screeningDateTime && ($screening['datetime[date]'] || $screening['datetime[time]'])) {
             return $this->asFailure(Craft::t('site', 'Screening Date Time is not valid.'),);
         }
 
-        $entry->screeningDate = $screeningDateTime->format('Y-m-d');
+        $entry->screeningDate = DateTimeHelper::toDateTime([
+            'date' => $screening['datetime[date]'],
+            'time' => '00:00',
+            'timezone' => $screening['datetime[timezone]'],
+        ]);
         $entry->screeningTime = $screeningDateTime->format('H:i');
 
         // Check for double clicks

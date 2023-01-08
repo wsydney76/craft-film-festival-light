@@ -1,0 +1,62 @@
+{# TODO: Find pure db query solution #}
+    {% set screeningDates = craft.entries
+        .section('screening')
+        .orderBy('screeningDate')
+        .unique()
+        .all()
+    %}
+
+    {% set dates = [] %}
+
+    {% for screeningDate in screeningDates %}
+        {% set date = screeningDate.screeningDate|date('Y-m-d') %}
+        {% if date not in dates %}
+            {% set dates = dates|push(date) %}
+        {% endif %}
+    {% endfor %}
+
+
+<form>
+    <div class="md:flex md:items-center md:space-x-4 space-y-4 md:space-y-0">
+        <div>
+            <select class="dark:text-gray-900" data-sprig data-s-target="#results" name="screeningDate">
+                <option value="" {{ screeningDate == '' ? 'selected' }}>{{ 'All days'|t('ff-light') }}</option>
+                {% for date in dates %}
+                    <option value="{{ date }}" {{ date == screeningDate ? 'selected' }} >{{ date|date('short') }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <select class="dark:text-gray-900" data-sprig data-s-target="#results" name="screeningTime">
+                <option value="" {{ screeningTime == '' ? 'selected' }}>{{ 'All times'|t('ff-light') }}</option>
+                {% for key, time in timeLUT %}
+                    <option value="{{ key }}" {{ key == screeningTime ? 'selected' }}>{{ time.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <select class="dark:text-gray-900" data-sprig data-s-target="#results" name="locationId">
+                <option value="" {{ not locationId ? 'selected' }}>{{ 'All locations'|t('ff-light') }}</option>
+                {% for location in craft.entries.section('location').orderBy('title').all %}
+                    <option value="{{ location.id }}" {{ locationId == location.id ? 'selected' }}>{{ location.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <select class="dark:text-gray-900" data-sprig data-s-target="#results" name="sectionId">
+                <option value="" {{ not sectionId ? 'selected' }}>{{ 'All sections'|t('ff-light') }}</option>
+                {% for section in craft.entries.section(['filmSection']).orderBy('title').all %}
+                    <option value="{{ section.id }}" {{ sectionId == section.id ? 'selected' }}>{{ section.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if resetUrl %}
+            <div>
+                {% include '_layouts/partials/button.twig' with {
+                    caption: 'Reset'|t('ff-light'),
+                    href: resetUrl
+                } only %}
+            </div>
+        {% endif %}
+    </div>
+</form>

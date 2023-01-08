@@ -1,30 +1,35 @@
 {% set scope = scope ?? '*' %}
 
-<div class="mb-4 mr-4 p-8 rounded shadow-xl {{ entry.screeningDate|date_modify('-1 day') > now ? 'bg-primary' : 'bg-gray-600' }} text-white space-y-4">
-    <div class="font-semibold">
-        {{ entry.screeningDate|date('short') }} {{ entry.screeningDate|time('short') }}
-    </div>
-    {% if scope != 'film' %}
-        <div >
-            {% for film in entry.films %}
-                <div class="text-lg underline uppercase">
-                    {{ film.link }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+{% set films = entry.films.all %}
+{% set locations = entry.locations.all %}
 
-    {% if scope != 'location' %}
-        <div>
-            {% for location in entry.locations %}
-                {{ location.link }}
-            {% endfor %}
+{% if films and locations %}
+    <div class="mb-4 mr-4 p-8 rounded shadow-xl {{ entry.screeningDate|date_modify('-1 day') > now ? 'bg-primary' : 'bg-gray-600' }} text-white space-y-4">
+        <div class="font-semibold">
+            {{ entry.screeningDate|date('short') }} {{ entry.screeningDate|time('short') }}
         </div>
-    {% endif %}
-    
-    {% if entry.remarks %}
-        <div>
-            {{ entry.remarks }}
-        </div>
-    {% endif %}
-</div>
+        {% if scope != 'film' %}
+            <div >
+                {% for film in films %}
+                    <div class="text-lg underline uppercase">
+                        {{ film.link }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if scope != 'location' %}
+            <div>
+                {% for location in locations %}
+                    {{ location.link }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if entry.remarks %}
+            <div>
+                {{ entry.remarks }}
+            </div>
+        {% endif %}
+    </div>
+{% endif %}

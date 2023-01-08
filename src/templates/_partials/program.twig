@@ -1,16 +1,16 @@
 {% js craft.app.config.custom.htmxScriptUrl %}
 
 
-
 {% embed '_layouts/embeds/content-xl.twig' with {showHeader: true, alignTitle: 'left'} %}
     {% block contentTop %}
         {% include '_layouts/partials/blocks.twig' with {
             query: entry.bodyContent
         } only %}
 
-
-        <div class="mt-4">
-            {{ sprig.component('@ff/_reactive/program.twig', {resetUrl: entry.url}) }}
+        {% set settings = craft.app.plugins.plugin('ff-light').settings %}
+        
+        <div class="mt-12">
+            {{ sprig.component('@ff/_reactive/program.twig', {resetUrl: entry.url, limit: settings.programPageLimit}) }}
         </div>
     {% endblock %}
 {% endembed %}

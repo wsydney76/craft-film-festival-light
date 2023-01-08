@@ -2,24 +2,8 @@
 {% set screeningTime = screeningTime ?? '' %}
 {% set locationId = locationId ?? '' %}
 {% set sectionId = sectionId ?? '' %}
-
-{# TODO: Find pure db query solution #}
-{% set screeningDates = craft.entries
-    .section('screening')
-    .orderBy('screeningDate')
-    .unique()
-    .all()
-%}
-
-{% set dates = [] %}
-
-{% for screeningDate in screeningDates %}
-	{% set date = screeningDate.screeningDate|date('Y-m-d') %}
-    {% if date not in dates %}
-        {% set dates = dates|push(date) %}
-    {% endif %}
-{% endfor %}
-
+{% set limit = limit ?? 2 %}
+{% set offset = offset ?? 0 %}
 
 {# TODO: Translation #}
 {% set timeLUT = {
@@ -29,50 +13,14 @@
     evening: {label: 'nach 19:30', criteria: '> 19:30'},
 } %}
 
-<form>
-    <div class="flex space-x-4">
-        <div>
-            <select data-sprig name="screeningDate">
-                <option value="" {{ screeningDate == '' ? 'selected' }}>{{ 'All days'|t('ff-light') }}</option>
-                {% for date in dates %}
-                    <option value="{{ date }}" {{ date == screeningDate ? 'selected' }} >{{ date|date('short') }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div>
-            <select data-sprig name="screeningTime">
-                <option value="" {{ screeningTime == '' ? 'selected' }}>{{ 'All times'|t('ff-light') }}</option>
-                {% for key, time in timeLUT %}
-                    <option value="{{ key }}" {{ key == screeningTime ? 'selected' }}>{{ time.label }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div>
-            <select data-sprig name="locationId">
-                <option value="" {{ not locationId ? 'selected' }}>{{ 'All locations'|t('ff-light') }}</option>
-                {% for location in craft.entries.section('location').orderBy('title').all %}
-                    <option value="{{ location.id }}" {{ locationId == location.id ? 'selected' }}>{{ location.title }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div>
-            <select data-sprig name="sectionId">
-                <option value="" {{ not sectionId ? 'selected' }}>{{ 'All sections'|t('ff-light') }}</option>
-                {% for section in craft.entries.section(['filmSection']).orderBy('title').all %}
-                    <option value="{{ section.id }}" {{ sectionId == section.id ? 'selected' }}>{{ section.title }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        {% if resetUrl %}
-            <div class="mt-2">
-                <a class="bg-secondary text-white px-4 py-2" href="{{ resetUrl }}">{{ 'Reset'|t('ff-light') }}</a>
-            </div>
-        {% endif %}
-    </div>
-</form>
+{% if sprig.isInclude %}
+    {% include ff('_partials/program-form.twig') %}
+{% endif %}
 
 {% set query = craft.entries
     .section('screening')
+    .offset(offset)
+    .limit(limit)
     .orderBy('screeningDate, screeningTime')
 %}
 
@@ -86,7 +34,6 @@
     {% do query.andRelatedTo(locationId) %}
 {% endif %}
 
-
 {% if sectionId %}
     {% do query.andRelatedTo(
         craft.entries
@@ -98,9 +45,7 @@
 
 {{ sprig.pushUrl("?screeningDate=#{screeningDate}&screeningTime=#{screeningTime}&locationId=#{locationId}&sectionId=#{sectionId}") }}
 
-<div class="mt-4">
-    {% include ff('_partials/screenings.twig') with {
-        query
-    } only %}
+<div id="results" class="mt-4">
+    {% include ff('_partials/program-screenings.twig')  %}
 </div>
 

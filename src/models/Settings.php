@@ -29,4 +29,13 @@ class Settings extends Model
     public bool $enableSubtitleLanguages = true;
 
     public bool $enableDiaries = true;
+
+    public int $programPageLimit = 20;
+
+    public function rules(): array
+    {
+        return [
+            ['programPageLimit', 'integer', 'min' => 2, 'max' => 50]
+        ];
+    }
 }

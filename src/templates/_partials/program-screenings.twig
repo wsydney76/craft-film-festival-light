@@ -1,0 +1,69 @@
+{# Only show screenings if film and location are 'live' #}
+{% set filmIds = craft.entries.section('film').ids %}
+{% set locationIds = craft.entries.section('location').ids %}
+{% set entries = query
+    .relatedTo({targetElement: filmIds, field: 'films'})
+    .andRelatedTo({targetElement: locationIds, field: 'locations'})
+    .with([
+        'locations',
+        'films',
+        ['films.cast', {limit: 2}]
+    ])
+.collect %}
+
+
+{% for entry in entries %}
+    <div class="md:flex md:space-x-6 mt-6">
+        <div class="font-bold text-lg w-[100px]">
+            {{ entry.screeningDate|date('short') }}
+        </div>
+        <div class="font-bold text-lg w-[70px]">
+            {{ entry.screeningTime|time('short') }}
+        </div>
+        <div>
+            {% for film in entry.films.all %}
+                <div class="font-bold text-lg w-[250px]">
+                    {{ film.link }}{{ not loop.last ? ', ' }}
+                </div>
+                <div>
+                    {% for person in film.cast.all %}
+                        {{ person.lastName }}{{ not loop.last ? ', ' }}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        <div>
+            {% for location in entry.locations.all %}
+                <div class="font-bold text-lg">
+                    {{ location.link }}{{ not loop.last ? ', ' }}
+                </div>
+                <div>
+                    {{ location.postalAddress|nl2br }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    {{ 'Nothing found'|t('ff-light') }}
+{% endfor %}
+
+{% if query.count() > offset + entries|length %}
+    {# Increments `offset` by the value of `limit` and swaps itself out on click #}
+    <div class="mt-8">
+
+        {% include '_layouts/partials/button.twig' with {
+            tag: 'button',
+            caption: 'Load more'|t('ff-light'),
+            data: {
+                sprig: true,
+                's-val:offset': offset +  limit,
+                's-target': 'this',
+                's-swap': 'outerHTML'
+            }
+        } only %}
+
+    </div>
+{% endif %}
+
+
+    

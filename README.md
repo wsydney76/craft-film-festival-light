@@ -47,9 +47,11 @@ The templates reuse layout elements from the starter, like cards and widgets.
 * Screening date/time
 * Remarks
 
+Screenings will only be displayed on the front end if both film and location are 'live'.
+
 ### Section
 
-e.g. Main Competition, short films, young meck-pomm cinema
+e.g. Main Competition, short films, young Meck-Pomm cinema
 
 ### Award
 
@@ -285,8 +287,7 @@ in `Contentoverview` plugin pages in order to maintain screening entries.
 For example, create this tab configuration:
 
 ```php
-'tabs' => [
-  
+$co->createTab('Screening', [
     $co->createColumn(7, [
         $co->createSection()
             ->heading('Screenings')
@@ -301,17 +302,16 @@ For example, create this tab configuration:
             ->buttons(false)
             ->scope('all')
             ->actions([
-                'delete',
-                'release',
+                'delete'
             ])
             ->limit(50)
     ]),
-        $co->createColumn(5, [
-            $co->createCustomSection()
-                ->heading('Create Screening')
-                ->customTemplate('custom/screenings-form.twig'),
-        ]),
-    ]
+    $co->createColumn(5, [
+        $co->createCustomSection()
+            ->heading('Create Screening')
+            ->customTemplate('custom/screenings-form.twig'),
+    ]),
+])
 ```
 
 Place this in the customtemplate:

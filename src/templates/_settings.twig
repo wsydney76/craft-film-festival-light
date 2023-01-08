@@ -10,11 +10,21 @@
     value: settings.templateRoot
 }) }}
 
+{# Check min/max match settings rule #}
+{{ forms.textField({
+    type: 'number',
+    label: 'Program Page Limit',
+    name: 'programPageLimit',
+    min: 2,
+    max: 50,
+    instructions: 'How many screenings should be displayed on the program page per load',
+    value: settings.programPageLimit,
+    errors: settings.errors('programPageLimit')
+}) }}
 
-
-        <p>Disable the following sections if you do not use them.
-            This will avoid unnecessary database queries and will make the site (a little) faster.</p>
-        <p>This will not remove the fields from the field layout. Do that manually. Existing content will not be touched.</p>
+<p>Disable the following sections if you do not use them.
+    This will avoid unnecessary database queries and will make the site (a little) faster.</p>
+<p>This will not remove the fields from the field layout. Do that manually. Existing content will not be touched.</p>
 
 <div class="readable" style="margin-top: 24px;">
     <blockquote class="note warning">
