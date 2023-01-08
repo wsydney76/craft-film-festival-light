@@ -1,7 +1,12 @@
 {% embed '_layouts/embeds/card-text.twig' %}
     {% block content %}
         {% if entry.diaryDate %}
-            {{ entry.diaryDate|date('short') }}
+            <div>
+                {{ entry.diaryDate|date('short') }}
+            </div>
         {% endif %}
+        <div class="mt-2">
+            {{ entry.tagline }}
+        </div>
     {% endblock %}
 {% endembed %}

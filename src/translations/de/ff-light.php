@@ -16,6 +16,7 @@ return [
     'Countries' => 'Laender',
     'Genres' => 'Genres',
     'Diaries' => 'Tagebücher',
+    'Diary' => 'Tagebuch',
     'Juries' => 'Juries',
     'Sponsors' => 'Sponsoren',
     'Topics' => 'Themen',

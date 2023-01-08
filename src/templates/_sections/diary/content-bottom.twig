@@ -1,0 +1,5 @@
+{# Show prev/next #}
+{% include '_layouts/partials/entry-nav-channel.twig' with {
+    entry,
+    criteria: {section: 'diary', orderBy: 'diaryDate desc'}
+} only %}
