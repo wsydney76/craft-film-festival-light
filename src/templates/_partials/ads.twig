@@ -10,6 +10,8 @@
             {targetElement: entry.id},
             {targetElement: entry.filmSections.ids},
         ]) %}
+    {% else %}
+        {% do query.relatedTo({targetElement: entry.id}) %}
     {% endif %}
     
     {% set ads = query.collect %}

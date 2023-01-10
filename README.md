@@ -65,6 +65,12 @@ e.g. Main Competition, short films, young Meck-Pomm cinema
 
 Use featured image for sponsor logo.
 
+### Advertisement
+
+Ads can be shown on film, location, person pages.
+
+If you select a film section, it will appear on all films of that section.
+
 ### Diary
 
 * Diary date

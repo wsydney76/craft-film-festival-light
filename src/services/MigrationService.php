@@ -616,7 +616,7 @@ class MigrationService extends Component
         ]);
 
         $this->updateFieldLayout('advertisement', [
-            'adImage', 'filmSections', 'films', 'locations'
+            'adImage', 'filmSections', 'films', 'locations', 'people'
         ]);
 
         $this->updateFieldLayout('topic', [
