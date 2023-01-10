@@ -94,12 +94,10 @@ class ScreeningController extends Controller
                     implode(' - ', $entry->getFirstErrors()),
                 );
             }
-        } else {
-            if (!Craft::$app->elements->saveElement($entry)) {
-                return $this->asFailure(
-                    implode(' - ', $entry->getFirstErrors()),
-                );
-            }
+        } else if (!Craft::$app->elements->saveElement($entry)) {
+            return $this->asFailure(
+                implode(' - ', $entry->getFirstErrors()),
+            );
         }
 
         return $this->asSuccess(Craft::t('site', 'Screening created.'));
