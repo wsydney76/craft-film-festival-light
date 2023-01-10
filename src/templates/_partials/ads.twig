@@ -1,0 +1,27 @@
+{% from '_layouts/macros/lib.twig' import img %}
+{% if settings.enableAds %}
+    {% set query = craft.entries
+        .section('advertisement')
+    %}
+    
+    {% if entry.section.handle == 'film' %}
+        {% do query.relatedTo([
+            'or',
+            {targetElement: entry.id},
+            {targetElement: entry.filmSections.ids},
+        ]) %}
+    {% endif %}
+    
+    {% set ads = query.collect %}
+    
+    {% if ads.count %}
+        {% for ad in ads %}
+            {% set image = ad.adImage.one %}
+            <div class="mb-8">
+                {{ img(image, {
+                    transform: {width: 280, height: 150, format: 'webp'}
+                }) }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endif %}

@@ -32,6 +32,11 @@
         {% endblock %}
 
         {% block sidebar %}
+
+            {% include ff('_partials/ads.twig') with {
+                entry, settings
+            } only %}
+
             {% include '_widgets/entries-list.twig' with {
                 heading: 'New'|t('ff-light'),
                 query: craft.entries.section('news,diary').limit(3)

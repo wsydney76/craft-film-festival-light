@@ -198,6 +198,12 @@ class MigrationService extends Component
             ]) &&
 
             $this->createSection([
+                'name' => 'Advertisement',
+                'plural' => 'Advertisements',
+                'template' => '@ff/_layouts/md'
+            ]) &&
+
+            $this->createSection([
                 'type' => Section::TYPE_STRUCTURE,
                 'name' => 'Topic',
                 'plural' => 'Topics',
@@ -410,6 +416,21 @@ class MigrationService extends Component
         ]);
 
         $this->createField([
+            'class' => Assets::class,
+            'groupId' => $fieldGroup->id,
+            'handle' => 'adImage',
+            'name' => 'Advertisement Image',
+            'defaultUploadLocationSource' => "volume:$volume->uid",
+            'defaultUploadLocationSubpath' => "advertisements",
+            'maxRelations' => 1,
+            'selectionLabel' => 'Select image',
+            'viewMode' => 'large',
+            'sources' => [
+                "volume:$volume->uid"
+            ]
+        ]);
+
+        $this->createField([
             'class' => PlainText::class,
             'groupId' => $fieldGroup->id,
             'handle' => 'shortBio',
@@ -594,6 +615,10 @@ class MigrationService extends Component
             'heroArea', 'featuredImage', 'tagline', 'bodyContent'
         ]);
 
+        $this->updateFieldLayout('advertisement', [
+            'adImage', 'filmSections', 'films', 'locations'
+        ]);
+
         $this->updateFieldLayout('topic', [
             'heroArea', 'featuredImage', 'tagline', 'bodyContent'
         ]);
@@ -616,7 +641,7 @@ class MigrationService extends Component
     {
         $fields = Craft::$app->fields;
 
-        $defaultFestivalSections = ['filmSection', 'award', 'sponsor', 'diary'];
+        $defaultFestivalSections = ['filmSection', 'award', 'sponsor', 'diary', 'advertisement'];
         $categorySections = ['topic', 'country', 'genre'];
 
         $defaultTableAttributes = [

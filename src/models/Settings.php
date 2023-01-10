@@ -13,6 +13,7 @@ class Settings extends Model
     public string $templateRoot = '';
 
     public bool $enableSponsors = true;
+    public bool $enableAds = true;
     public bool $enableTopics = true;
     public bool $enableAwards = true;
 
