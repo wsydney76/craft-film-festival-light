@@ -32,7 +32,7 @@
                 </div>
             {% endfor %}
         </div>
-        <div>
+        <div class="w-[250px]">
             {% for location in entry.locations.all %}
                 <div class="font-bold text-lg">
                     {{ location.link }}{{ not loop.last ? ', ' }}
@@ -42,6 +42,15 @@
                 </div>
             {% endfor %}
         </div>
+
+        {% if craft.app.plugins.pluginEnabled('favorites') %}
+            <div>
+                {% include '@favorites/_favorite.twig' with {
+                    entry
+                } only %}
+            </div>
+        {% endif %}
+
     </div>
 {% else %}
     {{ 'Nothing found'|t('ff-light') }}
