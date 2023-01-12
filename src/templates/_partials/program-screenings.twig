@@ -15,11 +15,14 @@
 {% for entry in entries %}
     <div class="md:flex md:space-x-6 mt-6">
         <div class="font-bold text-lg w-[100px]">
-            {{ entry.screeningDate|date('short') }}
+            <div>
+                {{ entry.screeningDate|date('short') }}
+            </div>
+            <div class="ml-2">
+                {{ entry.screeningTime|time('short') }}
+            </div>
         </div>
-        <div class="font-bold text-lg w-[70px]">
-            {{ entry.screeningTime|time('short') }}
-        </div>
+
         <div>
             {% for film in entry.films.all %}
                 <div class="font-bold text-lg w-[250px]">
