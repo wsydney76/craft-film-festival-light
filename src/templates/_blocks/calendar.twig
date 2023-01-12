@@ -1,0 +1,23 @@
+{% if currentUser %}
+    {% set ids = craft.favorites.ids %}
+
+    {% set query = craft.entries
+        .section('screening')
+        .screeningDate('>= today')
+        .id(ids)
+        .orderBy('screeningDate, screeningTime')
+    %}
+
+    <div class="text-2xl font-semibold mb-4">
+        {{ "Your Calendar"|t('ff-light') }}
+    </div>
+
+    {% include ff('_partials/program-screenings.twig') with {
+    	query,
+        offset: 0,
+        limit: 9999
+    } only %}
+    
+{% else %}
+    {{ "Log in to see your calendar."|t('ff-light') }}
+{% endif %}

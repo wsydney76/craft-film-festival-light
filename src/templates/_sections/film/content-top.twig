@@ -7,16 +7,6 @@
     {% set image = entry.filmPoster.one() %}
 {% endif %}
 
-
-{% if craft.app.plugins.pluginEnabled('favorites') %}
-    <div class="mb-8 flex justify-end">
-        {% include '@favorites/_favorite.twig' with {
-        	entry
-        } only %}
-    </div>
-{% endif %}
-
-
 <div class="flex space-x-8">
     {% if image %}
         <div>

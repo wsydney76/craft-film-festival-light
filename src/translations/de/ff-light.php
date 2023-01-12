@@ -63,4 +63,6 @@ return [
     'Nominee' => 'Nominiert',
     'Load more' => 'Mehr laden',
     'Nothing found' => 'Nichts gefunden',
+    'Log in to see your calendar.' => 'Loggen Sie sich ein, um Ihren Kalender zu sehen.',
+    'Your Calendar' => 'Ihr Kalender'
 ];

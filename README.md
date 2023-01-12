@@ -252,6 +252,15 @@ Updating the plugin and running `craft ff-light/install` will not touch existing
 
 This means you have to update field layouts manually in order to add any new fields.
 
+## Integration for Favorites plugin
+
+If the [Favorites plugin](https://github.com/wsydney76/craft-favorites) is installed, logged-in users
+can select screenings for their personal program.
+
+The [Members plugin](https://github.com/wsydney76/craft-members) offers the functionality needed to register/log in users, but any solution where users can log in will work.
+
+Include `{% include '@ff/_blocks/calendar.twig' %}` to include a calendar on a (not cached) personalized page.
+
 ## Integration for Package plugin (experimental)
 
 This plugin provides an experimental integration for the [Package plugin](https://github.com/wsydney76/craft-package#use-existing-sections-as-a-package).
