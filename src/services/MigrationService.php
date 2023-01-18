@@ -18,6 +18,7 @@ use craft\fields\Matrix;
 use craft\fields\Number;
 use craft\fields\PlainText;
 use craft\fields\Time;
+use craft\fields\Url;
 use craft\helpers\Console;
 use craft\models\FieldGroup;
 use craft\models\FieldLayoutTab;
@@ -216,6 +217,7 @@ class MigrationService extends Component
                 'name' => 'Screening',
                 'plural' => 'screenings',
                 'titleFormat' => '{films.one.status(null).drafts(null).provisionalDrafts(null).title} - {locations.status(null).drafts(null).provisionalDrafts(null).one.title} - {screeningDate|date(\'Y-m-d\')}:{screeningTime|time(\'H:i\')}',
+                'hasUrls' => false,
                 'template' => '@ff/_layouts/md'
             ])
         );
@@ -494,6 +496,14 @@ class MigrationService extends Component
             'charLimit' => 80
         ]);
 
+        $this->createField([
+            'class' => Url::class,
+            'groupId' => $fieldGroup->id,
+            'handle' => 'ticketLink',
+            'name' => 'Ticket Link',
+            'translationMethod' => Field::TRANSLATION_METHOD_NONE,
+        ]);
+
         $filmSection = Craft::$app->sections->getSectionByHandle('film');
         $personSection = Craft::$app->sections->getSectionByHandle('person');
         $this->createMatrixField([
@@ -631,7 +641,7 @@ class MigrationService extends Component
             'films', 'locations',
             ['screeningDate', ['width' => 25, 'required' => true]],
             ['screeningTime', ['width' => 25, 'required' => true]],
-            'remarks'
+            'remarks', 'ticketLink'
         ]);
 
         return true;
@@ -702,6 +712,7 @@ class MigrationService extends Component
         $withHeroFields = $config['withHeroFields'] ?? false;
         $createEntriesField = $config['createEntriesField'] ?? false;
         $template = $config['template'] ?? "ff/sections/$handle";
+        $hasUrls = isset($config['hasUrls']) ? $config['hasUrls'] : true;
 
         $this->sections[$handle] = Craft::$app->sections->getSectionByHandle($handle);
         if ($this->sections[$handle]) {
@@ -716,9 +727,9 @@ class MigrationService extends Component
                     ->map(fn(Site $site) => new Section_SiteSettings([
                         'siteId' => $site->id,
                         'enabledByDefault' => true,
-                        'hasUrls' => true,
-                        'uriFormat' => Craft::t('ff-light', $baseUri, language: $site->language) . '/{slug}',
-                        'template' => $template
+                        'hasUrls' => $hasUrls,
+                        'uriFormat' => $hasUrls ? Craft::t('ff-light', $baseUri, language: $site->language) . '/{slug}' : '',
+                        'template' => $hasUrls ? $template : ''
                     ]))
                     ->toArray()
             ]

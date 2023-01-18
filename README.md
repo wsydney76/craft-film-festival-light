@@ -46,6 +46,7 @@ The templates reuse layout elements from the starter, like cards and widgets.
 * Location
 * Screening date/time
 * Remarks
+* Ticket Link
 
 Screenings will only be displayed on the front end if both film and location are 'live'.
 

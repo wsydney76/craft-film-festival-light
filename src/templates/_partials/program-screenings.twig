@@ -47,12 +47,18 @@
         </div>
 
         {% if craft.app.plugins.pluginEnabled('favorites') %}
-            <div>
+            <div class="w-[25px]">
                 {% include '@favorites/_favorite.twig' with {
                     entry
                 } only %}
             </div>
         {% endif %}
+
+        <div class="w-[50px]">
+            {% if entry.ticketLink %}
+                <a class="underline" href="{{ entry.ticketLink }}">{{ 'Tickets'|t('ff-light') }}</a>
+            {% endif %}
+        </div>
 
     </div>
 {% else %}

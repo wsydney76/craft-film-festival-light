@@ -18,7 +18,7 @@
             {% endif %}
         </div>
         {% if scope != 'film' %}
-            <div >
+            <div>
                 {% for film in films %}
                     <div class="text-lg underline uppercase">
                         {{ film.link }}
@@ -41,6 +41,11 @@
             </div>
         {% endif %}
 
+        {% if entry.ticketLink %}
+            <div>
+                <a class="underline" href="{{ entry.ticketLink }}">{{ 'Tickets'|t('ff-light') }}</a>
+            </div>
+        {% endif %}
 
 
     </div>
