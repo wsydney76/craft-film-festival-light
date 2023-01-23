@@ -7,7 +7,7 @@
     <div class="mb-4 mr-4 p-8 rounded shadow-xl {{ entry.screeningDate|date_modify('-1 day') > now ? 'bg-primary' : 'bg-gray-600' }} text-white space-y-4">
         <div class="font-semibold flex">
             <div>
-                {{ entry.screeningDate|date('short') }} {{ entry.screeningDate|time('short') }}
+                {{ entry.screeningDate|date('short') }} {{ entry.screeningTime|time('short') }}
             </div>
             {% if craft.app.plugins.pluginEnabled('favorites') %}
                 <div class="ml-2">
