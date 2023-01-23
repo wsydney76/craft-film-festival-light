@@ -12,6 +12,7 @@ use craft\helpers\App;
 use craft\web\View;
 use wsydney76\ff\behaviors\EntryBehavior;
 use wsydney76\ff\models\Settings;
+use wsydney76\ff\services\BaseMigrationService;
 use wsydney76\ff\services\MigrationService;
 use wsydney76\ff\twigextensions\TwigExtension;
 use yii\base\Event;
@@ -25,6 +26,7 @@ use yii\base\Event;
  * @copyright wsydney76
  * @license MIT
  * @property-read MigrationService $migrationService
+ * @property-read BaseMigrationService $baseMigrationService
  */
 class Plugin extends BasePlugin
 {
@@ -34,7 +36,7 @@ class Plugin extends BasePlugin
     public static function config(): array
     {
         return [
-            'components' => ['migrationService' => MigrationService::class],
+            'components' => ['migrationService' => MigrationService::class, 'baseMigrationService' => BaseMigrationService::class],
         ];
     }
 
