@@ -36,7 +36,7 @@ class BaseMigrationService extends Component
 {
     protected string $logCategory = 'migration';
     protected string $imageVolume = 'images';
-    protected int $minImageWidth = 1900;
+    protected int $minHeroImageWidth = 1900;
 
     protected array $sections = [];
     protected array $fields = [];
@@ -113,7 +113,7 @@ class BaseMigrationService extends Component
             $contentService = MainModule::getInstance()->content;
 
             if ($withHeroFields) {
-                $image = $this->getRandomImage();
+                $image = $this->getRandomImage($this->minHeroImageWidth);
                 $fields['featuredImage'] = $image ? [$image->id] : null;
                 $fields['tagline'] = $this->faker->text(40);
             }
@@ -377,12 +377,12 @@ class BaseMigrationService extends Component
         }
     }
 
-    protected function getRandomImage(?int $width = null)
+    protected function getRandomImage($width)
     {
         return Asset::find()
             ->volume($this->imageVolume)
             ->kind('image')
-            ->width('> ' . $width ?? (string)$this->minImageWidth)
+            ->width('> ' . $width)
             ->orderBy(Craft::$app->db->driverName === 'mysql' ? 'RAND()' : 'RANDOM()')
             ->one();
     }
