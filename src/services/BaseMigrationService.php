@@ -46,7 +46,7 @@ class BaseMigrationService extends Component
     protected $faker;
 
 
-    private function createSection(array $config): bool
+    protected function createSection(array $config): bool
     {
         $name = $config['name'];
         $type = $config['type'] ?? Section::TYPE_CHANNEL;
@@ -311,7 +311,7 @@ class BaseMigrationService extends Component
         return true;
     }
 
-    private function updateElementSource(string $heading, string $sectionHandle, array $tableAttributes)
+    protected function updateElementSource(string $heading, string $sectionHandle, array $tableAttributes)
     {
         $config = Craft::$app->projectConfig->get('elementSources');
         $section = Craft::$app->sections->getSectionByHandle($sectionHandle);
@@ -354,7 +354,7 @@ class BaseMigrationService extends Component
     }
 
 
-    private function getFieldGroup(string $fieldGroup)
+    protected function getFieldGroup(string $fieldGroup)
     {
         return FieldGroupRecord::findOne(['name' => $fieldGroup]);
     }
