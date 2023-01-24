@@ -15,8 +15,8 @@ use craft\fields\Url;
 use craft\models\FieldGroup;
 use craft\models\Section;
 use Faker\Factory;
-use modules\main\MainModule;
-use modules\main\services\BaseMigrationService;
+use modules\base\BaseModule;
+use modules\base\services\BaseMigrationService;
 
 /**
  * Migration Service service
@@ -25,6 +25,8 @@ class MigrationService extends BaseMigrationService
 {
 
     public string $logCategory = '@ff/_install';
+    protected string $translationCategory = 'ff-light';
+    protected string $templateRoot = '@ff';
 
 
     public function install(): bool
@@ -47,7 +49,7 @@ class MigrationService extends BaseMigrationService
     private function createPages()
     {
         $homePage = Entry::findOne(['slug' => '__home__']);
-        MainModule::getInstance()->content->createEntry([
+        BaseModule::getInstance()->contentService->createEntry([
             'section' => 'page',
             'type' => 'pageTemplate',
             'title' => 'Program',
@@ -80,7 +82,7 @@ class MigrationService extends BaseMigrationService
                 $this->logError('Could not install fieldGroup', $this->fieldGroup);
                 return false;
             }
-            $this->message("Field group created");
+            $this->info("Field group created");
         }
 
         return true;

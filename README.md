@@ -136,7 +136,7 @@ This will
 * provide generic twig templates.
 
 
-Run `craft ff-light/install/seed` to create some (very) basic example content. Be sure there are some wide images.
+Run `craft ff-light/seed` to create some (very) basic example content. Be sure there are some wide images.
 
 ### CSS
 
