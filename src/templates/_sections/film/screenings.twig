@@ -13,10 +13,12 @@
 {% set screenings = query.collect %}
 
 {% if screenings.count() %}
-    {% include '_layouts/partials/headline.twig' with {
-        text: 'Screenings'|t('ff-light')
-    } only %}
+    <div class="mt-8 mb-4">
+        {% include '_layouts/partials/headline.twig' with {
+            text: 'Screenings'|t('ff-light')
+        } only %}
 
+    </div>
     <div class="flex flex-wrap">
         {% for screening in screenings %}
             {% include ff('_partials/screening.twig') with {

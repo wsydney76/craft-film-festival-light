@@ -33,6 +33,10 @@ class MigrationService extends BaseMigrationService
     {
         // Craft::$app->runAction('gc', ['interactive' => false]);
 
+
+
+        return true;
+
         $this->faker = Factory::create();
 
         $this->createPages() &&
@@ -62,6 +66,23 @@ class MigrationService extends BaseMigrationService
                 'de' => [
                     'title' => 'Programm',
                     'slug' => 'programm',
+                ]
+            ]
+        ]);
+
+        BaseModule::getInstance()->contentService->createEntry([
+            'section' => 'page',
+            'type' => 'pageTemplate',
+            'title' => 'People',
+            'slug' => 'people',
+            'parent' => $homePage,
+            'fields' => [
+                'pageTemplate' => '@ff/_sections/person/index.twig',
+            ],
+            'localized' => [
+                'de' => [
+                    'title' => 'Leute',
+                    'slug' => 'leute',
                 ]
             ]
         ]);
@@ -129,13 +150,6 @@ class MigrationService extends BaseMigrationService
                 'template' => '@ff/_layouts/sidebar'
             ]) &&
 
-            $this->createSection([
-                'name' => 'Person',
-                'plural' => 'People',
-                'titleFormat' => '{firstName} {nameAffix} {lastName}',
-                'addIndexPage' => true,
-                'template' => '@ff/_layouts/sidebar'
-            ]) &&
 
             $this->createSection([
                 'name' => 'Location',
@@ -178,15 +192,6 @@ class MigrationService extends BaseMigrationService
             $this->createSection([
                 'name' => 'Advertisement',
                 'plural' => 'Advertisements',
-                'template' => '@ff/_layouts/md'
-            ]) &&
-
-            $this->createSection([
-                'type' => Section::TYPE_STRUCTURE,
-                'name' => 'Topic',
-                'plural' => 'Topics',
-                'addIndexPage' => true,
-                'createEntriesField' => true,
                 'template' => '@ff/_layouts/md'
             ]) &&
 
@@ -268,17 +273,6 @@ class MigrationService extends BaseMigrationService
             'searchable' => true
         ]);
 
-        $this->createField([
-            'class' => Entries::class,
-            'groupId' => $fieldGroup->id,
-            'name' => 'People',
-            'handle' => 'people',
-            'sources' => [
-                "section:$section->uid"
-            ],
-            'selectionLabel' => 'Add a person',
-            'searchable' => true
-        ]);
 
         $this->createField([
             'class' => Number::class,
@@ -310,32 +304,6 @@ class MigrationService extends BaseMigrationService
             'charLimit' => 3
         ]);
 
-        $this->createField([
-            'class' => PlainText::class,
-            'groupId' => $fieldGroup->id,
-            'handle' => 'firstName',
-            'name' => 'First Name',
-            'charLimit' => 30,
-            'searchable' => true
-        ]);
-
-        $this->createField([
-            'class' => PlainText::class,
-            'groupId' => $fieldGroup->id,
-            'handle' => 'nameAffix',
-            'name' => 'Name affix',
-            'charLimit' => 30,
-            'searchable' => true
-        ]);
-
-        $this->createField([
-            'class' => PlainText::class,
-            'groupId' => $fieldGroup->id,
-            'handle' => 'lastName',
-            'name' => 'Last Name',
-            'charLimit' => 30,
-            'searchable' => true
-        ]);
 
         $this->createField([
             'class' => Number::class,
@@ -364,20 +332,6 @@ class MigrationService extends BaseMigrationService
         ]);
 
         $volume = Craft::$app->volumes->getVolumeByHandle('images');
-        $this->createField([
-            'class' => Assets::class,
-            'groupId' => $fieldGroup->id,
-            'handle' => 'photo',
-            'name' => 'Photo',
-            'defaultUploadLocationSource' => "volume:$volume->uid",
-            'defaultUploadLocationSubpath' => "photos",
-            'maxRelations' => 1,
-            'selectionLabel' => 'Select image',
-            'viewMode' => 'large',
-            'sources' => [
-                "volume:$volume->uid"
-            ]
-        ]);
 
         $this->createField([
             'class' => Assets::class,
@@ -409,34 +363,6 @@ class MigrationService extends BaseMigrationService
             ]
         ]);
 
-        $this->createField([
-            'class' => PlainText::class,
-            'groupId' => $fieldGroup->id,
-            'handle' => 'shortBio',
-            'name' => 'Short Biography',
-            'multiline' => true,
-            'initialRows' => 2,
-            'translationMethod' => Field::TRANSLATION_METHOD_LANGUAGE,
-            'searchable' => true
-        ]);
-
-        $this->createField([
-            'class' => PlainText::class,
-            'groupId' => $fieldGroup->id,
-            'handle' => 'filmography',
-            'name' => 'Filmography',
-            'multiline' => true,
-            'initialRows' => 2,
-            'translationMethod' => Field::TRANSLATION_METHOD_LANGUAGE,
-            'searchable' => true
-        ]);
-
-        $this->createField([
-            'class' => Date::class,
-            'groupId' => $fieldGroup->id,
-            'name' => 'Birthday',
-            'handle' => 'birthday'
-        ]);
 
         $this->createField([
             'class' => Date::class,
@@ -549,7 +475,7 @@ class MigrationService extends BaseMigrationService
                 ['featuredImage', ['width' => 25, 'required' => true]], ['filmPoster', ['width' => 25]],
                 'tagline',
                 ['filmSections', ['width' => 25]],
-                ['topics', ['width' => 25]], ['sponsors', ['width' => 25]],
+                ['sponsors', ['width' => 25]],
                 'bodyContent'
             ],
             'Details' => [
@@ -566,14 +492,14 @@ class MigrationService extends BaseMigrationService
         ]);
 
 
-        $this->updateFieldLayout('person', [
-            ['firstName', ['required' => true, 'width' => 25]],
-            ['nameAffix', ['width' => 25]],
-            ['lastName', ['required' => true, 'width' => 25]],
-            'featuredImage', 'tagline',
-            'photo', 'birthday', 'shortBio', 'filmography',
-            'bodyContent'
-        ]);
+//        $this->updateFieldLayout('person', [
+//            ['firstName', ['required' => true, 'width' => 25]],
+//            ['nameAffix', ['width' => 25]],
+//            ['lastName', ['required' => true, 'width' => 25]],
+//            'featuredImage', 'tagline',
+//            'photo', 'birthday', 'shortBio', 'works',
+//            'bodyContent'
+//        ]);
 
         $this->updateFieldLayout('filmSection', [
             'heroArea', 'featuredImage', 'tagline', 'bodyContent'
@@ -594,7 +520,7 @@ class MigrationService extends BaseMigrationService
             ['diaryDate', ['required' => true]],
             ['locations', ['width' => 25]],
             ['films', ['width' => 25]],
-            ['people', ['width' => 25]],
+            ['persons', ['width' => 25]],
             'bodyContent'
         ]);
 
@@ -603,11 +529,7 @@ class MigrationService extends BaseMigrationService
         ]);
 
         $this->updateFieldLayout('advertisement', [
-            'adImage', 'filmSections', 'films', 'locations', 'people'
-        ]);
-
-        $this->updateFieldLayout('topic', [
-            'heroArea', 'featuredImage', 'tagline', 'bodyContent'
+            'adImage', 'filmSections', 'films', 'locations', 'persons'
         ]);
 
         $this->updateFieldLayout('language', [
@@ -629,7 +551,7 @@ class MigrationService extends BaseMigrationService
         $fields = Craft::$app->fields;
 
         $defaultFestivalSections = ['filmSection', 'award', 'sponsor', 'diary', 'advertisement'];
-        $categorySections = ['topic', 'country', 'genre'];
+        $categorySections = ['country', 'genre'];
 
         $defaultTableAttributes = [
             'author',
@@ -643,11 +565,11 @@ class MigrationService extends BaseMigrationService
             ...$defaultTableAttributes
         ]);
 
-        $this->updateElementSource('Festival', 'person', [
-            "field:{$fields->getFieldByHandle('tagline')->uid}",
-            "field:{$fields->getFieldByHandle('photo')->uid}",
-            ...$defaultTableAttributes
-        ]);
+//        $this->updateElementSource('Festival', 'person', [
+//            "field:{$fields->getFieldByHandle('tagline')->uid}",
+//            "field:{$fields->getFieldByHandle('photo')->uid}",
+//            ...$defaultTableAttributes
+//        ]);
 
         $this->updateElementSource('Festival', 'location', [
             "field:{$fields->getFieldByHandle('tagline')->uid}",

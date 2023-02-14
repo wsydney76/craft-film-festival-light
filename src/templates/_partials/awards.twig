@@ -16,9 +16,11 @@
     .collect %}
 
     {% if entries.count %}
-        {% include '_layouts/partials/headline.twig' with {
-            text: heading
-        } only %}
+        <div class="mt-8 mb-4">
+            {% include '_layouts/partials/headline.twig' with {
+                text: heading
+            } only %}
+        </div>
 
         {% embed '_layouts/embeds/grid.twig' with {wide: wide} %}
             {% block content %}

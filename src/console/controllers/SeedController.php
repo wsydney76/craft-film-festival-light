@@ -24,7 +24,7 @@ class SeedController extends \modules\main\console\controllers\SeedController
 
         $person1 = $this->createEntry([
             'section' => 'person',
-            'type' => 'default',
+            'type' => 'profile',
             'title' => 'Erna von Klawuppke',
             'slug' => 'erna-von-klawuppke',
             'fields' => [
@@ -34,7 +34,7 @@ class SeedController extends \modules\main\console\controllers\SeedController
                 'tagline' => 'Shooting Star',
                 'birthday' => new DateTime('1986-04-09'),
                 'shortBio' => 'Erna studied in Kleinfinstenich and New York.',
-                'filmography' => 'Tbd.',
+                'works' => 'Tbd.',
                 'featuredImage' => $this->getRandomImageIds(),
                 'photo' => $this->getRandomImageIds(width: 200),
                 'bodyContent' => $this->getTextBlock($faker)
@@ -51,7 +51,7 @@ class SeedController extends \modules\main\console\controllers\SeedController
 
         $person2 = $this->createEntry([
             'section' => 'person',
-            'type' => 'default',
+            'type' => 'profile',
             'title' => 'Heinz Mustermann',
             'slug' => 'heinz-mustermann',
             'fields' => [
@@ -60,7 +60,7 @@ class SeedController extends \modules\main\console\controllers\SeedController
                 'tagline' => 'Dummy',
                 'birthday' => new DateTime('1932-11-15'),
                 'shortBio' => 'Dummy',
-                'filmography' => 'Tbd.',
+                'works' => 'Tbd.',
                 'featuredImage' => $this->getRandomImageIds(),
                 'photo' => $this->getRandomImageIds(width: 200),
                 'bodyContent' => $this->getTextBlock($faker)
@@ -144,27 +144,6 @@ class SeedController extends \modules\main\console\controllers\SeedController
                     'slug' => 'goldene-ananas',
                     'fields' => [
                         'tagline' => 'Diesen Preis wollen alle gewinnen.'
-                    ]
-                ]
-            ]
-        ]);
-
-        $topic = $this->createEntry([
-            'section' => 'topic',
-            'type' => 'default',
-            'title' => 'Super Heroes',
-            'slug' => 'super-heroes',
-            'fields' => [
-                'tagline' => 'Everybody can become a super hero',
-                'featuredImage' => $this->getRandomImageIds(),
-                'bodyContent' => $this->getTextBlock($faker)
-            ],
-            'localized' => [
-                'de' => [
-                    'title' => 'Superhelden',
-                    'slug' => 'superhelden',
-                    'fields' => [
-                        'tagline' => 'Jeder kann ein Superheld werden.'
                     ]
                 ]
             ]
@@ -256,7 +235,6 @@ class SeedController extends \modules\main\console\controllers\SeedController
                 'camera' => [$person1->id],
                 'director' => [$person2->id],
                 'filmSections' => [$filmSection->id],
-                'topics' => [$topic->id],
                 'sponsors' => [$sponsor->id],
                 'languages' => [$language1->id],
                 'subtitleLanguages' => [$language2->id, $language3->id],
@@ -312,7 +290,7 @@ class SeedController extends \modules\main\console\controllers\SeedController
                 'diaryDate' => new DateTime('2023-04-30'),
                 'films' => [$film->id],
                 'locations' => [$location->id],
-                'people' => [$person2->id],
+                'persons' => [$person2->id],
                 'bodyContent' => [
                     [
                         'type' => 'gallery',

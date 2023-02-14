@@ -27,7 +27,7 @@ return [
     'Section' => 'Reihe',
     'Approved for' => 'Freigegeben ab',
     'subtitles' => 'Untertitel',
-    'Filmography' => 'Filmografie',
+    'works' => 'Filmografie',
     'Language' => 'Sprache',
     'Born' => 'Geboren',
     'Subtitles' => 'Subtitles',

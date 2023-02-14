@@ -6,7 +6,7 @@
 <div class="">
     {% set featuredEntries = entry.featuredEntries.collect %}
 
-
+    
     {% set news = craft.entries.section('news').limit(12 - featuredEntries.count).collect %}
 
    {% set entries = featuredEntries.merge(news) %}

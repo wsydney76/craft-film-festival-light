@@ -37,10 +37,10 @@
     ]
 } only %}
 
-{% if entry.filmography %}
-    {% embed "_layouts/embeds/widget.twig" with {heading: 'Filmography'|t('ff-light')} %}
+{% if entry.works %}
+    {% embed "_layouts/embeds/widget.twig" with {heading: 'works'|t('ff-light')} %}
         {% block content %}
-            {{ entry.filmography|nl2br }}
+            {{ entry.works|nl2br }}
         {% endblock %}
     {% endembed %}
 {% endif %}
