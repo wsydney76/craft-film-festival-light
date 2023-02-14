@@ -33,10 +33,6 @@ class MigrationService extends BaseMigrationService
     {
         // Craft::$app->runAction('gc', ['interactive' => false]);
 
-
-
-        return true;
-
         $this->faker = Factory::create();
 
         $this->createPages() &&
