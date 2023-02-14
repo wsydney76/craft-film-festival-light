@@ -180,6 +180,15 @@ Update the `sectionsRoots` setting like this:
 
 This will allow the starter to find section specific templates (card content, json-ld) provided by the plugin.
 
+Update the `sectionTemplates` setting like this:
+```php
+'sectionTemplates' => [
+    'person' => '@ff/_layouts/sidebar.twig'
+],
+```
+
+This will render the specific plugin page template for `person` entries. 
+
 Update the `sitemapSections` settings and include the sections you want to appear on the sitemap, e.g..:
 
 ```php
