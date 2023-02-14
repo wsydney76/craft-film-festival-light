@@ -49,7 +49,6 @@
 {% include ff('_partials/sidebar-lists.twig') with {
     lists: [
         {heading: 'Section'|t('ff-light'), query: entry.filmSections, enabled: settings.enableSections},
-        {heading: 'Topic'|t('ff-light'), query: entry.topics, enabled: settings.enableTopics},
         {heading: 'Diaries'|t('ff-light'), query: craft.entries.section('diary').relatedTo(entry), enabled: settings.enableDiaries},
         {heading: 'News'|t('ff-light'), query: craft.entries.section('news').relatedTo(entry), enabled: true},
     ]
