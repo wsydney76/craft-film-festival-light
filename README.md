@@ -194,7 +194,7 @@ Update the `sitemapSections` settings and include the sections you want to appea
 ```php
 'sitemapSections' => [ 
     ['handle' => 'filmSection', 'orderBy' => 'title'],
-    ['handle' => 'competition', 'orderBy' => 'title'],
+    ['handle' => 'award', 'orderBy' => 'title'],
     ['handle' => 'location', 'orderBy' => 'title'],
     ['handle' => 'film', 'orderBy' => 'title'],
     ['handle' => 'person', 'orderBy' => 'lastName, firstName'],

@@ -10,17 +10,17 @@
                 {heading: 'Director'|t('ff-light'), query: entry.director, enabled: true}] %}
 
                 {% if list.enabled %}
-                    {% set people = list.query
+                    {% set persons = list.query
                         .with([
                             ['photo', {withTransforms: [transform]}]
                         ])
                     .collect %}
 
-                    {% if people %}
+                    {% if persons %}
                         <div>
                             <div class="font-semibold mb-1 text-lg">{{ list.heading }}</div>
                             <div class="space-y-2">
-                                {% for person in people %}
+                                {% for person in persons %}
                                     <div class="flex space-x-4 items-center">
                                         {% set photo = person.photo.one %}
                                         {% if photo %}
