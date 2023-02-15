@@ -4,6 +4,8 @@ namespace wsydney76\ff\services;
 
 use Craft;
 use craft\base\Field;
+use craft\elements\conditions\entries\EntryCondition;
+use craft\elements\conditions\entries\TypeConditionRule;
 use craft\elements\Entry;
 use craft\fields\Assets;
 use craft\fields\Date;
@@ -12,6 +14,8 @@ use craft\fields\Number;
 use craft\fields\PlainText;
 use craft\fields\Time;
 use craft\fields\Url;
+use craft\helpers\ArrayHelper;
+use craft\helpers\StringHelper;
 use craft\models\FieldGroup;
 use craft\models\Section;
 use Faker\Factory;
@@ -54,6 +58,7 @@ class MigrationService extends BaseMigrationService
             'type' => 'pageTemplate',
             'title' => 'Program',
             'slug' => 'program',
+            'site' => 'en',
             'parent' => $homePage,
             'fields' => [
                 'pageTemplate' => '@ff/_partials/program.twig',
@@ -71,6 +76,7 @@ class MigrationService extends BaseMigrationService
             'type' => 'pageTemplate',
             'title' => 'People',
             'slug' => 'people',
+            'site' => 'en',
             'parent' => $homePage,
             'fields' => [
                 'pageTemplate' => '@ff/_sections/person/index.twig',
@@ -209,6 +215,23 @@ class MigrationService extends BaseMigrationService
         }
 
         $section = Craft::$app->sections->getSectionByHandle('person');
+        $profileType = ArrayHelper::firstWhere($section->entryTypes, 'handle', 'profile');
+
+        $selectionCondition = [
+            'elementType' => Entry::class,
+            'fieldContext' => 'global',
+            'class' => EntryCondition::class,
+            'conditionRules' => [
+                [
+                    'class' => TypeConditionRule::class,
+                    'operator' => 'in',
+                    'values' => [
+                        $profileType->uid
+                    ]
+                ]
+            ]
+        ];
+
         $this->createField([
             'class' => Entries::class,
             'groupId' => $fieldGroup->id,
@@ -218,7 +241,8 @@ class MigrationService extends BaseMigrationService
                 "section:$section->uid"
             ],
             'selectionLabel' => 'Add a person',
-            'searchable' => true
+            'searchable' => true,
+            'selectionCondition' => $selectionCondition
         ]);
 
         $this->createField([
@@ -230,7 +254,8 @@ class MigrationService extends BaseMigrationService
                 "section:$section->uid"
             ],
             'selectionLabel' => 'Add a person',
-            'searchable' => true
+            'searchable' => true,
+            'selectionCondition' => $selectionCondition
         ]);
 
         $this->createField([
@@ -242,7 +267,8 @@ class MigrationService extends BaseMigrationService
                 "section:$section->uid"
             ],
             'selectionLabel' => 'Add a person',
-            'searchable' => true
+            'searchable' => true,
+            'selectionCondition' => $selectionCondition
         ]);
 
         $this->createField([
@@ -254,7 +280,8 @@ class MigrationService extends BaseMigrationService
                 "section:$section->uid"
             ],
             'selectionLabel' => 'Add a person',
-            'searchable' => true
+            'searchable' => true,
+            'selectionCondition' => $selectionCondition
         ]);
 
         $this->createField([
@@ -266,7 +293,8 @@ class MigrationService extends BaseMigrationService
                 "section:$section->uid"
             ],
             'selectionLabel' => 'Add a person',
-            'searchable' => true
+            'searchable' => true,
+            'selectionCondition' => $selectionCondition
         ]);
 
 

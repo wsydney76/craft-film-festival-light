@@ -22,6 +22,8 @@ class SeedController extends \modules\main\console\controllers\SeedController
 
         $faker = Factory::create();
 
+        $photos = $this->getImagesFromFolder('photos/starter/');
+
         $person1 = $this->createEntry([
             'section' => 'person',
             'type' => 'profile',
@@ -35,7 +37,7 @@ class SeedController extends \modules\main\console\controllers\SeedController
                 'birthday' => new DateTime('1986-04-09'),
                 'shortBio' => 'Erna studied in Kleinfinstenich and New York.',
                 'works' => 'Tbd.',
-                'featuredImage' => $this->getRandomImageIds(),
+                'featuredImage' => [$photos[0]->id ?? null],
                 'photo' => $this->getRandomImageIds(width: 200),
                 'bodyContent' => $this->getTextBlock($faker)
             ],
@@ -52,16 +54,16 @@ class SeedController extends \modules\main\console\controllers\SeedController
         $person2 = $this->createEntry([
             'section' => 'person',
             'type' => 'profile',
-            'title' => 'Heinz Mustermann',
-            'slug' => 'heinz-mustermann',
+            'title' => 'Klara Mustermann',
+            'slug' => 'klara-mustermann',
             'fields' => [
-                'firstName' => 'Heinz',
+                'firstName' => 'Klara',
                 'lastName' => 'Mustermann',
                 'tagline' => 'Dummy',
                 'birthday' => new DateTime('1932-11-15'),
                 'shortBio' => 'Dummy',
                 'works' => 'Tbd.',
-                'featuredImage' => $this->getRandomImageIds(),
+                'featuredImage' => [$photos[1]->id ?? null],
                 'photo' => $this->getRandomImageIds(width: 200),
                 'bodyContent' => $this->getTextBlock($faker)
             ],
