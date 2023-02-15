@@ -22,7 +22,7 @@ class SeedController extends \modules\main\console\controllers\SeedController
 
         $faker = Factory::create();
 
-        $photos = $this->getImagesFromFolder('photos/starter/');
+        $photos = $this->getImagesFromFolder('photos/starter/', 100);
 
         $person1 = $this->createEntry([
             'section' => 'person',
@@ -37,8 +37,8 @@ class SeedController extends \modules\main\console\controllers\SeedController
                 'birthday' => new DateTime('1986-04-09'),
                 'shortBio' => 'Erna studied in Kleinfinstenich and New York.',
                 'works' => 'Tbd.',
-                'featuredImage' => [$photos[0]->id ?? null],
-                'photo' => $this->getRandomImageIds(width: 200),
+                'photo' => [$photos[0]->id ?? null],
+                'featuredImage' => $this->getRandomImageIds(width: 200),
                 'bodyContent' => $this->getTextBlock($faker)
             ],
             'localized' => [
@@ -63,8 +63,8 @@ class SeedController extends \modules\main\console\controllers\SeedController
                 'birthday' => new DateTime('1932-11-15'),
                 'shortBio' => 'Dummy',
                 'works' => 'Tbd.',
-                'featuredImage' => [$photos[1]->id ?? null],
-                'photo' => $this->getRandomImageIds(width: 200),
+                'photo' => [$photos[1]->id ?? null],
+                'featuredImage' => $this->getRandomImageIds(width: 200),
                 'bodyContent' => $this->getTextBlock($faker)
             ],
         ]);
