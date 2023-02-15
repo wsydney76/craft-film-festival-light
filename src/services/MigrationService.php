@@ -433,6 +433,26 @@ class MigrationService extends BaseMigrationService
 
         $filmSection = Craft::$app->sections->getSectionByHandle('film');
         $personSection = Craft::$app->sections->getSectionByHandle('person');
+
+        $profileType = ArrayHelper::firstWhere($personSection->entryTypes, 'handle', 'profile');
+        $filmType = $filmSection->entryTypes[0];
+
+        $selectionCondition = [
+            'elementType' => Entry::class,
+            'fieldContext' => 'global',
+            'class' => EntryCondition::class,
+            'conditionRules' => [
+                [
+                    'class' => TypeConditionRule::class,
+                    'operator' => 'in',
+                    'values' => [
+                        $profileType->uid,
+                        $filmType->uid
+                    ]
+                ]
+            ]
+        ];
+
         $this->createMatrixField([
             'groupId' => $fieldGroup->id,
             'handle' => 'awards',
@@ -465,6 +485,7 @@ class MigrationService extends BaseMigrationService
                             ],
                             'selectionLabel' => 'Add a film/person',
                             'searchable' => true,
+                            'selectionCondition' => $selectionCondition,
                             'layoutConfig' => [
                                 'width' => 25,
                             ]
@@ -479,6 +500,7 @@ class MigrationService extends BaseMigrationService
                             ],
                             'selectionLabel' => 'Add a film/person',
                             'searchable' => true,
+                            'selectionCondition' => $selectionCondition,
                             'layoutConfig' => [
                                 'width' => 25,
                             ]

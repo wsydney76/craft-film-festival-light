@@ -1,18 +1,19 @@
-{% if settings.enableAwards %}
-    {% include ff('_partials/awards.twig') with {
+<div class="space-y-12">
+    {% if settings.enableAwards %}
+        {% include ff('_partials/awards.twig') with {
+            entry
+        } only %}
+    {% endif %}
+
+
+    {% if settings.enableCreditedWith %}
+        {% include ff('_sections/person/credited-with.twig') with {
+            entry
+        } only %}
+    {% endif %}
+
+
+    {% include ff('_sections/film/screenings.twig') with {
         entry
     } only %}
-{% endif %}
-
-
-
-{% if settings.enableCreditedWith %}
-    {% include ff('_sections/person/credited-with.twig') with {
-        entry
-    } only %}
-{% endif %}
-
-
-{% include ff('_sections/film/screenings.twig') with {
-    entry
-} only %}
+</div>

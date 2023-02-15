@@ -194,7 +194,7 @@ class SeedController extends \modules\main\console\controllers\SeedController
             'localized' => [
                 'de' => [
                     'title' => 'Französisch',
-                    'slug' => 'französisch'
+                    'slug' => 'franzoesisch'
                 ]
             ]
         ]);

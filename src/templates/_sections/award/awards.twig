@@ -2,7 +2,7 @@
 
 {% if blocks.count() %}
 
-    <div class="space-y-4">
+    <div class="space-y-12">
         {% for block in blocks %}
         	<div>
                 {% include '_layouts/partials/cards.twig' with {
@@ -10,7 +10,8 @@
                     wide: false,
                     query: block.winner
                 } only %}
-
+            </div>
+            <div>
                 {% include '_layouts/partials/cards.twig' with {
                     heading: block.description ~ ': ' ~  'Nominees'|t('ff-light'),
                     wide: true,
